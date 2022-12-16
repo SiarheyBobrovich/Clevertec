@@ -1,0 +1,35 @@
+plugins {
+	id 'java'
+	id 'jacoco'
+//	id 'org.springframework.boot' version '2.7.6'
+//	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'by.bobrovich'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+//	implementation 'org.springframework.boot:spring-boot-starter'
+//	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
+	testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.1'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
+	testImplementation 'org.mockito:mockito-core:4.9.0'
+}
+
+
+tasks.named('test') {
+	useJUnitPlatform()
+	jacocoTestReport {
+		reports {
+			xml.required = false
+			csv.required = false
+			html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+		}
+	}
+}
