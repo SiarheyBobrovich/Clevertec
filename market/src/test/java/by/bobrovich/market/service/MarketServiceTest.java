@@ -41,7 +41,7 @@ class MarketServiceTest {
         initProductDao();
         Mockito.when(productDao.exists(Mockito.anyInt())).thenReturn(true);
 
-        MarketReceipt receipt = (MarketReceipt)service.getBill(getOrder());
+        MarketReceipt receipt = (MarketReceipt)service.getReceipt(getOrder());
 
         String result = getRecieptAsString(receipt);
 
@@ -55,7 +55,7 @@ class MarketServiceTest {
         initProductDao();
         Mockito.when(productDao.exists(Mockito.anyInt())).thenReturn(true);
         Mockito.when(discountDao.getById(1234)).thenReturn(Optional.of(new MarketDiscountCard(1234, (byte)10)));
-        Receipt receipt = service.getBill(getOrderWithCard());
+        Receipt receipt = service.getReceipt(getOrderWithCard());
 
         String result = getRecieptAsString(receipt);
 

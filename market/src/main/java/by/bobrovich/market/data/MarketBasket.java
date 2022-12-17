@@ -4,30 +4,28 @@ import by.bobrovich.market.api.Basket;
 import by.bobrovich.market.api.Product;
 import by.bobrovich.market.decorator.ProductQuantity;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.*;
 
 public class MarketBasket implements Basket {
 
-    private List<ProductQuantity> products;
+    private final Map<Integer, ProductQuantity> products;
 
     public MarketBasket() {
-        products = new ArrayList<>();
+        products = new HashMap<>();
     }
 
     @Override
     public List<ProductQuantity> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<ProductQuantity> products) {
-        this.products = products;
+        return products.values().stream().toList();
     }
 
     @Override
     public void addProduct(Product product, int quantity) {
-        products.add(new ProductQuantity(product, quantity));
+        final int id = product.getId();
+        final int resultQuantity = !products.containsKey(id) ? quantity :
+                products.get(id).getQuantity() + quantity;
+
+        products.put(product.getId(), new ProductQuantity(product, resultQuantity));
     }
 
     @Override

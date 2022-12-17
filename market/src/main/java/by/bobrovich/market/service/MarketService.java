@@ -7,8 +7,6 @@ import by.bobrovich.market.exceptions.DiscountCardNotFoundException;
 import by.bobrovich.market.exceptions.ProductNotFoundException;
 import by.bobrovich.market.factory.ReceiptFactory;
 
-import java.util.List;
-
 public class MarketService implements ProductService {
 
     private final OrderConverter<String[], Order> orderConverter;
@@ -26,7 +24,7 @@ public class MarketService implements ProductService {
     }
 
     @Override
-    public Receipt getBill(Order order) {
+    public Receipt getReceipt(Order order) {
         Basket basket = new MarketBasket();
         Integer discountCardNumber = order.discountCardNumber();
         DiscountCard discountCard = discountCardNumber != null ?
@@ -45,8 +43,8 @@ public class MarketService implements ProductService {
     }
 
     @Override
-    public Receipt getBill(String[] args) {
+    public Receipt getReceipt(String[] args) {
         Order order = orderConverter.convert(args);
-        return getBill(order);
+        return getReceipt(order);
     }
 }

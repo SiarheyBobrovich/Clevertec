@@ -7,12 +7,12 @@ public interface ProductService {
      * @param order User order
      * @return Bill
      */
-    Receipt getBill(Order order);
+    Receipt getReceipt(Order order);
 
     /**
      * Calculate and return bill for args
      * @param args User args
      * @return Bill
      */
-    Receipt getBill(String[] args);
+    Receipt getReceipt(String[] args);
 }
