@@ -46,4 +46,16 @@ class FileProductDaoTest {
     void existsFailed(int id) {
         assertFalse(productDao.exists(id));
     }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
+    void isQuantityAvailable(int quantity) {
+        assertTrue(productDao.isQuantityAvailable(5, quantity));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {Integer.MIN_VALUE, -1, 50, Integer.MAX_VALUE})
+    void isQuantityAvailableFailed(int quantity) {
+        assertFalse(productDao.isQuantityAvailable(5, quantity));
+    }
 }

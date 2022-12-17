@@ -1,6 +1,5 @@
 package by.bobrovich.market.dao;
 
-import by.bobrovich.market.api.Product;
 import by.bobrovich.market.api.ProductDao;
 import by.bobrovich.market.entity.MarketProduct;
 
@@ -10,7 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class InMemoryProductDao implements ProductDao {
-    private final Map<Integer, Product> products;
+    private final Map<Integer, MarketProduct> products;
 
     public InMemoryProductDao() {
         this.products = new HashMap<>();
@@ -18,13 +17,18 @@ public class InMemoryProductDao implements ProductDao {
     }
 
     @Override
-    public Optional<Product> getById(Integer id) {
+    public Optional<MarketProduct> getById(Integer id) {
         return Optional.ofNullable(products.get(id));
     }
 
     @Override
     public boolean exists(Integer id) {
         return products.containsKey(id);
+    }
+
+    @Override
+    public boolean isQuantityAvailable(Integer id, Integer quantity) {
+        return quantity >= 0 && products.containsKey(id) && products.get(id).getQuantity() >= quantity;
     }
 
     private void init() {

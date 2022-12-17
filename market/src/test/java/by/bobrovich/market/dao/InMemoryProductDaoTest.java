@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 class InMemoryProductDaoTest {
     private final InMemoryProductDao dao = new InMemoryProductDao();
 
@@ -35,5 +38,17 @@ class InMemoryProductDaoTest {
     @ValueSource(ints = {Integer.MIN_VALUE, Integer.MAX_VALUE, 0})
     void notExists(int id) {
         Assertions.assertFalse(dao.exists(id));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
+    void isQuantityAvailable(int quantity) {
+        assertTrue(dao.isQuantityAvailable(5, quantity));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {Integer.MIN_VALUE, -1, 50, Integer.MAX_VALUE})
+    void isQuantityAvailableFailed(int quantity) {
+        assertFalse(dao.isQuantityAvailable(5, quantity));
     }
 }
