@@ -1,7 +1,7 @@
 package by.bobrovich.market.data.receipt;
 
 import by.bobrovich.market.api.Basket;
-import by.bobrovich.market.decorator.ProductQuantity;
+import by.bobrovich.market.decorator.BasketProductQuantityDecorator;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -32,9 +32,9 @@ public class MarketReceipt extends AbstractReceipt {
     }
 
     private BigDecimal countTotal(Basket basket) {
-        List<ProductQuantity> products = basket.getProducts();
+        List<BasketProductQuantityDecorator> products = basket.getProducts();
         return products.stream()
-                .map(ProductQuantity::getTotalPrice)
+                .map(BasketProductQuantityDecorator::getTotalPrice)
                 .reduce(BigDecimal::add)
                 .orElse(BigDecimal.ZERO)
                 .setScale(2, RoundingMode.HALF_UP);

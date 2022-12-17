@@ -5,7 +5,8 @@ import by.bobrovich.market.api.Order;
 import by.bobrovich.market.api.Product;
 import by.bobrovich.market.dao.InMemoryDiscountCardDao;
 import by.bobrovich.market.dao.InMemoryProductDao;
-import by.bobrovich.market.data.*;
+import by.bobrovich.market.data.MarketOrder;
+import by.bobrovich.market.data.MarketOrderEntry;
 import by.bobrovich.market.data.receipt.MarketReceipt;
 import by.bobrovich.market.entity.MarketDiscountCard;
 import by.bobrovich.market.entity.MarketProduct;
@@ -78,11 +79,9 @@ class MarketServiceTest {
         }
     }
 
-
-
     private Order getOrder() {
         return MarketOrder.builder()
-                .addOrderEntry(new MarketOrderEntry(1, 1))
+                .addOrderEntry(new MarketOrderEntry(1, 5))
                 .addOrderEntry(new MarketOrderEntry(2, 22))
                 .addOrderEntry(new MarketOrderEntry(3, 33))
                 .build();

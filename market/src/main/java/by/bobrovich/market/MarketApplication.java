@@ -16,6 +16,7 @@ import by.bobrovich.market.exceptions.DiscountCardNotFoundException;
 import by.bobrovich.market.exceptions.ProductNotFoundException;
 import by.bobrovich.market.factory.ReceiptFactory;
 import by.bobrovich.market.service.MarketService;
+import by.bobrovich.market.exceptions.ServiceNotAvailableNow;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -43,7 +44,8 @@ public class MarketApplication {
 
 		try {
 			receipt = productService.getReceipt(args);
-		}catch (ConvertionException | DiscountCardNotFoundException | ProductNotFoundException e) {
+		}catch (ConvertionException | DiscountCardNotFoundException |
+				ProductNotFoundException | ServiceNotAvailableNow e) {
 			System.out.println(e.getMessage());
 			return;
 		}

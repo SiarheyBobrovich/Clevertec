@@ -2,7 +2,7 @@ package by.bobrovich.market.data.receipt;
 
 import by.bobrovich.market.api.Basket;
 import by.bobrovich.market.api.Receipt;
-import by.bobrovich.market.decorator.ProductQuantity;
+import by.bobrovich.market.decorator.BasketProductQuantityDecorator;
 
 import java.io.PrintStream;
 import java.math.BigDecimal;
@@ -51,7 +51,7 @@ public abstract class AbstractReceipt implements Receipt {
     public abstract String getTotal();
 
     private String createBody(Basket basket) {
-        List<ProductQuantity> products = basket.getProducts();
+        List<BasketProductQuantityDecorator> products = basket.getProducts();
         StringBuilder info = new StringBuilder(BASE_BODY);
 
         products.forEach(productQuantity -> {

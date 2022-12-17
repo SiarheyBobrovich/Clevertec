@@ -2,7 +2,7 @@ package by.bobrovich.market.data.receipt;
 
 import by.bobrovich.market.api.Basket;
 import by.bobrovich.market.api.DiscountCard;
-import by.bobrovich.market.decorator.ProductQuantity;
+import by.bobrovich.market.decorator.BasketProductQuantityDecorator;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -32,12 +32,12 @@ public class MarketDiscountReceipt extends AbstractReceipt {
         final BigDecimal cardDiscount = BigDecimal.valueOf(card.getDiscount())
                 .setScale(2, RoundingMode.HALF_UP)
                 .divide(new BigDecimal(100), RoundingMode.HALF_UP);
-        final List<ProductQuantity> products = basket.getProducts();
+        final List<BasketProductQuantityDecorator> products = basket.getProducts();
 
         BigDecimal currentTotal = BigDecimal.ZERO;
         BigDecimal discount = BigDecimal.ZERO;
 
-        for (ProductQuantity product : products) {
+        for (BasketProductQuantityDecorator product : products) {
             if (product.isDiscount() && product.getQuantity() > 4) {
                 discount = discount.add(product.getTotalPrice().multiply(cardDiscount));
             }

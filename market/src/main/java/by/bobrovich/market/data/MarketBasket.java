@@ -2,30 +2,41 @@ package by.bobrovich.market.data;
 
 import by.bobrovich.market.api.Basket;
 import by.bobrovich.market.api.Product;
-import by.bobrovich.market.decorator.ProductQuantity;
+import by.bobrovich.market.decorator.BasketProductQuantityDecorator;
 
-import java.util.*;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 public class MarketBasket implements Basket {
 
-    private final Map<Integer, ProductQuantity> products;
+    private final Map<Integer, BasketProductQuantityDecorator> products;
 
     public MarketBasket() {
         products = new HashMap<>();
     }
 
     @Override
-    public List<ProductQuantity> getProducts() {
+    public List<BasketProductQuantityDecorator> getProducts() {
         return products.values().stream().toList();
     }
 
     @Override
     public void addProduct(Product product, int quantity) {
-        final int id = product.getId();
-        final int resultQuantity = !products.containsKey(id) ? quantity :
-                products.get(id).getQuantity() + quantity;
+        int id = product.getId();
+        quantity += !products.containsKey(id) ? 0 : products.get(id).getQuantity();
 
-        products.put(product.getId(), new ProductQuantity(product, resultQuantity));
+        products.put(
+                id,
+                new BasketProductQuantityDecorator(
+                        BasketProduct.builder()
+                                .setId(id)
+                                .setDescription(product.getDescription())
+                                .setPrice(product.getPrice())
+                                .setDiscount(product.isDiscount())
+                                .setQuantity(quantity)
+                                .build()));
     }
 
     @Override
