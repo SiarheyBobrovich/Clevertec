@@ -27,8 +27,13 @@ public class InMemoryProductDao implements ProductDao {
     }
 
     @Override
-    public boolean isQuantityAvailable(Integer id, Integer quantity) {
+    public boolean isExistsAndQuantityAvailable(Integer id, Integer quantity) {
         return quantity >= 0 && products.containsKey(id) && products.get(id).getQuantity() >= quantity;
+    }
+
+    @Override
+    public void update(MarketProduct product) {
+        products.put(product.getId(), product);
     }
 
     private void init() {
@@ -67,7 +72,8 @@ public class InMemoryProductDao implements ProductDao {
                 new MarketProduct(26, "Nisi id", new BigDecimal( "0.45"), 10, false),
                 new MarketProduct(27, "Malesuada vestibu mi", new BigDecimal( "10.35"), 10, false),
                 new MarketProduct(28, "Sictum lacus", new BigDecimal( "53.70"), 10, false),
-                new MarketProduct(29, "Nunc tempor", new BigDecimal("0.25"), 10, false)
+                new MarketProduct(29, "Nunc tempor", new BigDecimal("0.25"), 10, false),
+                new MarketProduct(500, "Thread Test", new BigDecimal("0.25"), 500, false)
         };
     }
 }

@@ -43,12 +43,12 @@ class InMemoryProductDaoTest {
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10})
     void isQuantityAvailable(int quantity) {
-        assertTrue(dao.isQuantityAvailable(5, quantity));
+        assertTrue(dao.isExistsAndQuantityAvailable(5, quantity));
     }
 
     @ParameterizedTest
     @ValueSource(ints = {Integer.MIN_VALUE, -1, 50, Integer.MAX_VALUE})
     void isQuantityAvailableFailed(int quantity) {
-        assertFalse(dao.isQuantityAvailable(5, quantity));
+        assertFalse(dao.isExistsAndQuantityAvailable(5, quantity));
     }
 }

@@ -29,5 +29,11 @@ public interface ProductDao {
      * @param quantity - Product quantity
      * @return - true if exists, and quantity is available
      */
-    boolean isQuantityAvailable(Integer id, Integer quantity);
+    boolean isExistsAndQuantityAvailable(Integer id, Integer quantity);
+
+    /**
+     * Update current product
+     * @param product - updated
+     */
+    void update(MarketProduct product);
 }

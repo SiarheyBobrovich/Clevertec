@@ -1,6 +1,5 @@
 package by.bobrovich.market.dao;
 
-import by.bobrovich.market.api.DiscountCard;
 import by.bobrovich.market.api.DiscountCardDao;
 import by.bobrovich.market.entity.MarketDiscountCard;
 
@@ -20,7 +19,7 @@ public class InMemoryDiscountCardDao implements DiscountCardDao {
 
 
     @Override
-    public Optional<DiscountCard> getById(Integer id) {
+    public Optional<MarketDiscountCard> getById(Integer id) {
         return Optional.ofNullable(discountCardMap.get(id));
     }
 

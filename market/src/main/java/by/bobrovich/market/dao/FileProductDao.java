@@ -32,8 +32,13 @@ public class FileProductDao implements ProductDao {
     }
 
     @Override
-    public boolean isQuantityAvailable(Integer id, Integer quantity) {
+    public boolean isExistsAndQuantityAvailable(Integer id, Integer quantity) {
         return quantity >= 0 && products.containsKey(id) && products.get(id).getQuantity() >= quantity;
+    }
+
+    @Override
+    public void update(MarketProduct product) {
+        products.put(product.getId(), product);
     }
 
     private void init(String fileName) throws IOException {
