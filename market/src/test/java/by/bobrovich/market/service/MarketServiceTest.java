@@ -90,9 +90,9 @@ class MarketServiceTest {
 
     private List<Product> getProducts() {
         return List.of(
-                new MarketProduct(1, "first", BigDecimal.valueOf(11.11), false),
-                new MarketProduct(2, "second", BigDecimal.valueOf(22.22), true),
-                new MarketProduct(3, "third", BigDecimal.valueOf(33.33), false)
+                new MarketProduct(1, "first", BigDecimal.valueOf(11.11), 10, false),
+                new MarketProduct(2, "second", BigDecimal.valueOf(22.22), 10, true),
+                new MarketProduct(3, "third", BigDecimal.valueOf(33.33), 10, false)
         );
     }
 

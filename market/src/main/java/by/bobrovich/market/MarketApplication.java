@@ -6,6 +6,8 @@ import by.bobrovich.market.api.ProductService;
 import by.bobrovich.market.api.Receipt;
 import by.bobrovich.market.api.Order;
 import by.bobrovich.market.converter.api.OrderConverter;
+import by.bobrovich.market.dao.FileDiscountCardDao;
+import by.bobrovich.market.dao.FileProductDao;
 import by.bobrovich.market.dao.InMemoryDiscountCardDao;
 import by.bobrovich.market.dao.InMemoryProductDao;
 import by.bobrovich.market.converter.ArgsOrderConverter;
@@ -77,7 +79,7 @@ public class MarketApplication {
 			return new InMemoryProductDao();
 		}else {
 			try {
-				return new InMemoryProductDao(path);
+				return new FileProductDao(path);
 			}catch (IOException e) {
 				System.out.println(e.getMessage());
 				System.exit(0);
@@ -91,7 +93,7 @@ public class MarketApplication {
 			return new InMemoryDiscountCardDao();
 		}else {
 			try {
-				return new InMemoryDiscountCardDao(path);
+				return new FileDiscountCardDao(path);
 			}catch (IOException e) {
 				System.out.println(e.getMessage());
 				System.exit(0);

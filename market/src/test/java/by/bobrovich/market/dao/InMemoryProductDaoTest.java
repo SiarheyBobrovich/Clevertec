@@ -2,23 +2,21 @@ package by.bobrovich.market.dao;
 
 import by.bobrovich.market.api.Product;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class InMemoryProductDaoTest {
-    private static final InMemoryProductDao dao = new InMemoryProductDao();
-
-    @Test
-    void initFromFile() {
-        Assertions.assertDoesNotThrow(() -> new InMemoryProductDao("src/main/resources/in_memory_products.csv"));
-    }
+    private final InMemoryProductDao dao = new InMemoryProductDao();
 
     @ParameterizedTest
     @ValueSource(ints = {1, 10, 20})
     void getById(int id) {
-        Product product = dao.getById(id).get();
+        Product product = dao.getById(id).orElse(null);
+
+        Assertions.assertNotNull(product);
         Assertions.assertEquals(id, product.getId());
+        Assertions.assertNotNull(product.getDescription());
+        Assertions.assertNotNull(product.getPrice());
     }
 
     @ParameterizedTest

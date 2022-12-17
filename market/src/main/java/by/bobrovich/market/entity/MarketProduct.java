@@ -7,18 +7,19 @@ import java.util.Objects;
 
 public class MarketProduct implements Product {
     private int id;
-
     private String description;
     private BigDecimal price;
+    private int quantity;
     private boolean isDiscount;
 
     public MarketProduct() {
     }
 
-    public MarketProduct(int id, String description, BigDecimal price, boolean isDiscount) {
+    public MarketProduct(int id, String description, BigDecimal price, int quantity, boolean isDiscount) {
         this.id = id;
         this.description = description;
         this.price = price;
+        this.quantity = quantity;
         this.isDiscount = isDiscount;
     }
 
@@ -49,6 +50,14 @@ public class MarketProduct implements Product {
         this.price = price;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     @Override
     public boolean isDiscount() {
         return isDiscount;
@@ -62,21 +71,11 @@ public class MarketProduct implements Product {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof MarketProduct that)) return false;
-        return id == that.id && isDiscount == that.isDiscount && Objects.equals(description, that.description) && Objects.equals(price, that.price);
+        return id == that.id && quantity == that.quantity && isDiscount == that.isDiscount && Objects.equals(description, that.description) && Objects.equals(price, that.price);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, description, price, isDiscount);
-    }
-
-    @Override
-    public String toString() {
-        return "MarketProduct{" +
-                "id=" + id +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", isDiscount=" + isDiscount +
-                '}';
+        return Objects.hash(id, description, price, quantity, isDiscount);
     }
 }
