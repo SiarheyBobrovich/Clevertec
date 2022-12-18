@@ -1,6 +1,6 @@
 package by.bobrovich.market.dao;
 
-import by.bobrovich.market.api.DiscountCard;
+import by.bobrovich.market.entity.MarketDiscountCard;
 import by.bobrovich.market.exceptions.DiscountCardNotFoundException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -20,7 +20,7 @@ class FileDiscountCardDaoTest {
     @ParameterizedTest
     @ValueSource(ints = {1234,2345,3456})
     void getById(int id) {
-        DiscountCard discountCard = discountCardDao.getById(id).orElse(null);
+        MarketDiscountCard discountCard = discountCardDao.getById(id).orElse(null);
 
         assertNotNull(discountCard);
         assertEquals(id, discountCard.getId());

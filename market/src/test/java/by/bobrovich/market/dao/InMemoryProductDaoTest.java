@@ -1,6 +1,6 @@
 package by.bobrovich.market.dao;
 
-import by.bobrovich.market.api.Product;
+import by.bobrovich.market.entity.MarketProduct;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -14,7 +14,7 @@ class InMemoryProductDaoTest {
     @ParameterizedTest
     @ValueSource(ints = {1, 10, 20})
     void getById(int id) {
-        Product product = dao.getById(id).orElse(null);
+        MarketProduct product = dao.getById(id).orElse(null);
 
         Assertions.assertNotNull(product);
         Assertions.assertEquals(id, product.getId());

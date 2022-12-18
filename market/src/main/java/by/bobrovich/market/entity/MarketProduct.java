@@ -1,11 +1,9 @@
 package by.bobrovich.market.entity;
 
-import by.bobrovich.market.api.Product;
-
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class MarketProduct implements Product {
+public class MarketProduct {
     private int id;
     private String description;
     private BigDecimal price;
@@ -23,7 +21,6 @@ public class MarketProduct implements Product {
         this.isDiscount = isDiscount;
     }
 
-    @Override
     public int getId() {
         return id;
     }
@@ -32,7 +29,6 @@ public class MarketProduct implements Product {
         this.id = id;
     }
 
-    @Override
     public String getDescription() {
         return description;
     }
@@ -41,7 +37,6 @@ public class MarketProduct implements Product {
         this.description = description;
     }
 
-    @Override
     public BigDecimal getPrice() {
         return price;
     }
@@ -58,7 +53,6 @@ public class MarketProduct implements Product {
         this.quantity = quantity;
     }
 
-    @Override
     public boolean isDiscount() {
         return isDiscount;
     }

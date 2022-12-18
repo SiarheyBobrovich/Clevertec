@@ -4,6 +4,8 @@ import by.bobrovich.market.api.Basket;
 import by.bobrovich.market.api.Receipt;
 import by.bobrovich.market.decorator.BasketProductQuantityDecorator;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -48,24 +50,24 @@ public abstract class AbstractReceipt implements Receipt {
     public String getBody() {
         return body;
     }
-    public abstract String getTotal();
+    public abstract String getTotalBlock();
 
     private String createBody(Basket basket) {
         List<BasketProductQuantityDecorator> products = basket.getProducts();
         StringBuilder info = new StringBuilder(BASE_BODY);
 
-        products.forEach(productQuantity -> {
-            String description = productQuantity.getDescription();
-            BigDecimal price = productQuantity.getPrice();
-            BigDecimal total = productQuantity.getTotalPrice();
-            int quantity = productQuantity.getQuantity();
+        products.forEach(product -> {
+            int quantity = product.getQuantity();
+            String productDescription = product.getDescription();
+            BigDecimal productPrice = product.getPrice();
+            BigDecimal totalPrice = product.getTotalPrice();
 
             info.append(normalizeString(5, String.valueOf(quantity)))
-                    .append(normalizeString(20, description))
+                    .append(normalizeString(20, productDescription))
                     .append("$")
-                    .append(normalizeString(10, setScaleTo2(price).toString()))
+                    .append(normalizeString(10, setScaleTo2(productPrice).toString()))
                     .append("$")
-                    .append(normalizeString(10, setScaleTo2(total).toString()))
+                    .append(normalizeString(10, setScaleTo2(totalPrice).toString()))
                     .append('\n');
         });
 
@@ -78,7 +80,18 @@ public abstract class AbstractReceipt implements Receipt {
         out.println(blockSeparator);
         out.print(getBody());
         out.println(blockSeparator);
-        out.println(getTotal());
+        out.println(getTotalBlock());
+    }
+
+    @Override
+    public void print(OutputStreamWriter out) throws IOException {
+        out.append(getTitle())
+            .append(blockSeparator)
+            .append('\n')
+            .append(getBody())
+            .append(blockSeparator)
+            .append('\n')
+            .append(getTotalBlock());
     }
 
     protected String normalizeString(int length, String description) {
@@ -93,6 +106,14 @@ public abstract class AbstractReceipt implements Receipt {
         }
 
         return result;
+    }
+
+    protected BigDecimal getVat(BigDecimal currentTotal) {
+        return currentTotal.multiply(new BigDecimal("0.17"));
+    }
+
+    protected BigDecimal getTaxableTot(BigDecimal currentTotal) {
+        return currentTotal.multiply(new BigDecimal("0.83"));
     }
 
     protected BigDecimal setScaleTo2(BigDecimal decimal){

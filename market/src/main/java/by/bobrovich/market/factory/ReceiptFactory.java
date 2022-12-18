@@ -2,14 +2,15 @@ package by.bobrovich.market.factory;
 
 import by.bobrovich.market.api.Receipt;
 import by.bobrovich.market.api.Basket;
-import by.bobrovich.market.api.DiscountCard;
 import by.bobrovich.market.data.receipt.MarketReceipt;
 import by.bobrovich.market.data.receipt.MarketDiscountReceipt;
+import by.bobrovich.market.decorator.BasketDiscountDecorator;
+import by.bobrovich.market.entity.MarketDiscountCard;
 
 import java.time.LocalDateTime;
 
 public class ReceiptFactory {
-    public Receipt create(Basket basket, DiscountCard card, int cashier) {
+    public Receipt create(Basket basket, MarketDiscountCard card, int cashier) {
         Receipt receipt;
         if (card == null) {
             receipt = createStandardReceipt(basket, cashier);
@@ -19,11 +20,20 @@ public class ReceiptFactory {
         return receipt;
     }
 
-    private Receipt createDiscountReceipt(Basket basket, int cashier, DiscountCard card) {
-        return new MarketDiscountReceipt(LocalDateTime.now(), basket, cashier, card);
+    private Receipt createDiscountReceipt(Basket basket, int cashier, MarketDiscountCard card) {
+        return new MarketDiscountReceipt(
+                LocalDateTime.now(),
+                new BasketDiscountDecorator(basket),
+                cashier,
+                card
+        );
     }
 
     private Receipt createStandardReceipt(Basket basket, int cashier) {
-        return new MarketReceipt(LocalDateTime.now(), basket, cashier);
+        return new MarketReceipt(
+                LocalDateTime.now(),
+                basket,
+                cashier
+        );
     }
 }

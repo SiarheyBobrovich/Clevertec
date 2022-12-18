@@ -1,7 +1,9 @@
 package by.bobrovich.market.api;
 
 import by.bobrovich.market.decorator.BasketProductQuantityDecorator;
+import by.bobrovich.market.entity.MarketProduct;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface Basket {
@@ -14,8 +16,14 @@ public interface Basket {
 
     /**
      * Add a new product to current basket
-     * @param product - A new product
+     * @param product - Product from db
      * @param quantity - A quantity of products
      */
-    void addProduct(Product product, int quantity);
+    void addProduct(MarketProduct product, int quantity);
+
+    /**
+     * Returns a total of products
+     * @return total of products as BigDecimal
+     */
+    BigDecimal getTotalPrice();
 }

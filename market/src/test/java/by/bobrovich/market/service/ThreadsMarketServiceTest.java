@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 class ThreadsMarketServiceTest {
     private static final MarketService service;
@@ -41,8 +42,8 @@ class ThreadsMarketServiceTest {
         long threadAlive;
 
         do {
-            threadAlive = threads.stream().filter(Thread::isAlive).count();
-            System.out.println(threadAlive);
+            threads = threads.stream().filter(Thread::isAlive).collect(Collectors.toList());
+            threadAlive = threads.size();
         }while (threadAlive != 0);
 
         Assertions.assertEquals(500, count.get());

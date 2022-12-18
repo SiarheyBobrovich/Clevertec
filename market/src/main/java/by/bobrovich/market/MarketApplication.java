@@ -21,6 +21,7 @@ import by.bobrovich.market.exceptions.ServiceNotAvailableNow;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Scanner;
 
 public class MarketApplication {
 
@@ -50,7 +51,11 @@ public class MarketApplication {
 			return;
 		}
 
-		receipt.print(System.out);
+		try {
+			new UserTalker(new Scanner(System.in)).talkAboutReceipt(receipt);
+		} catch (IOException e) {
+			System.out.println("Something went wrong.");
+		}
 	}
 
 	private static ProductService initFromMemory() {
@@ -61,7 +66,6 @@ public class MarketApplication {
 				getReceiptFactory()
 		);
 	}
-
 	private static ProductService initFromFiles(String productsPath, String cardsPath) {
 		return new MarketService(
 			getOrderFactory(),
@@ -70,12 +74,10 @@ public class MarketApplication {
 				getReceiptFactory()
 		);
 	}
-
 	private static Map.Entry<String, String> splitArg(String arg) {
 		String[] strings = arg.split("-");
 		return Map.entry(strings[0], strings[1]);
 	}
-
 	public static ProductDao getProductDao(String path) {
 		if (path == null) {
 			return new InMemoryProductDao();
@@ -89,7 +91,6 @@ public class MarketApplication {
 		}
 		return null;
 	}
-
 	public static DiscountCardDao getDiscountCardDao(String path) {
 		if (path == null) {
 			return new InMemoryDiscountCardDao();
@@ -106,7 +107,6 @@ public class MarketApplication {
 	public static OrderConverter<String[], Order> getOrderFactory() {
 		return new ArgsOrderConverter();
 	}
-
 	public static ReceiptFactory getReceiptFactory() {
 		return new ReceiptFactory();
 	}

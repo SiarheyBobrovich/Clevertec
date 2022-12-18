@@ -1,9 +1,10 @@
 package by.bobrovich.market.data;
 
 import by.bobrovich.market.api.Basket;
-import by.bobrovich.market.api.Product;
 import by.bobrovich.market.decorator.BasketProductQuantityDecorator;
+import by.bobrovich.market.entity.MarketProduct;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +24,7 @@ public class MarketBasket implements Basket {
     }
 
     @Override
-    public void addProduct(Product product, int quantity) {
+    public void addProduct(MarketProduct product, int quantity) {
         int id = product.getId();
         quantity += !products.containsKey(id) ? 0 : products.get(id).getQuantity();
 
@@ -37,6 +38,13 @@ public class MarketBasket implements Basket {
                                 .setDiscount(product.isDiscount())
                                 .setQuantity(quantity)
                                 .build()));
+    }
+
+    @Override
+    public BigDecimal getTotalPrice() {
+        return products.values().stream()
+                .map(BasketProductQuantityDecorator::getTotalPrice)
+                .reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
     }
 
     @Override

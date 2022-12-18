@@ -2,7 +2,6 @@ package by.bobrovich.market.service;
 
 import by.bobrovich.market.api.Receipt;
 import by.bobrovich.market.api.Order;
-import by.bobrovich.market.api.Product;
 import by.bobrovich.market.dao.InMemoryDiscountCardDao;
 import by.bobrovich.market.dao.InMemoryProductDao;
 import by.bobrovich.market.data.MarketOrder;
@@ -40,11 +39,11 @@ class MarketServiceTest {
     @Test
     void getBillWithoutCard() {
         initProductDao();
-        Mockito.when(productDao.exists(Mockito.anyInt())).thenReturn(true);
 
         MarketReceipt receipt = (MarketReceipt)service.getReceipt(getOrder());
 
         String result = getRecieptAsString(receipt);
+        System.out.println(result);
 
         Assertions.assertTrue(result.contains("$1327.87"));
         Assertions.assertTrue(result.contains("$271.97"));
@@ -54,11 +53,11 @@ class MarketServiceTest {
     @Test
     void getBillWithCard() {
         initProductDao();
-        Mockito.when(productDao.exists(Mockito.anyInt())).thenReturn(true);
         Mockito.when(discountDao.getById(1234)).thenReturn(Optional.of(new MarketDiscountCard(1234, (byte)10)));
         Receipt receipt = service.getReceipt(getOrderWithCard());
 
         String result = getRecieptAsString(receipt);
+        System.out.println(result);
 
         Assertions.assertTrue(result.contains("$1327.87"));
         Assertions.assertTrue(result.contains("$271.97"));
@@ -72,8 +71,10 @@ class MarketServiceTest {
         return buffer.toString(StandardCharsets.UTF_8);
     }
 
-
     private void initProductDao(){
+        Mockito.when(productDao.exists(Mockito.anyInt())).thenReturn(true);
+        Mockito.when(productDao.isExistsAndQuantityAvailable(Mockito.anyInt(), Mockito.anyInt())).thenReturn(true);
+
         for (int i = 0; i < 3; i++) {
             Mockito.doReturn(Optional.ofNullable(getProducts().get(i))).when(productDao).getById(i + 1);
         }
@@ -81,17 +82,17 @@ class MarketServiceTest {
 
     private Order getOrder() {
         return MarketOrder.builder()
-                .addOrderEntry(new MarketOrderEntry(1, 5))
+                .addOrderEntry(new MarketOrderEntry(1, 1))
                 .addOrderEntry(new MarketOrderEntry(2, 22))
                 .addOrderEntry(new MarketOrderEntry(3, 33))
                 .build();
     }
 
-    private List<Product> getProducts() {
+    private List<MarketProduct> getProducts() {
         return List.of(
                 new MarketProduct(1, "first", BigDecimal.valueOf(11.11), 10, false),
-                new MarketProduct(2, "second", BigDecimal.valueOf(22.22), 10, true),
-                new MarketProduct(3, "third", BigDecimal.valueOf(33.33), 10, false)
+                new MarketProduct(2, "second", BigDecimal.valueOf(22.22), 23, true),
+                new MarketProduct(3, "third", BigDecimal.valueOf(33.33), 34, false)
         );
     }
 

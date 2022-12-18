@@ -1,6 +1,6 @@
 package by.bobrovich.market.dao;
 
-import by.bobrovich.market.api.Product;
+import by.bobrovich.market.entity.MarketProduct;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -19,7 +19,7 @@ class FileProductDaoTest {
     @ParameterizedTest
     @ValueSource(ints = {1, 10, 20, 29})
     void getById(int id) {
-        Product product = productDao.getById(id).orElse(null);
+        MarketProduct product = productDao.getById(id).orElse(null);
 
         assertNotNull(product);
         assertEquals(id, product.getId());
@@ -30,7 +30,7 @@ class FileProductDaoTest {
     @ParameterizedTest
     @ValueSource(ints = {Integer.MIN_VALUE, 0, 30})
     void getByIdFailed(int id) {
-        Product product = productDao.getById(id).orElse(null);
+        MarketProduct product = productDao.getById(id).orElse(null);
 
         assertNull(product);
     }

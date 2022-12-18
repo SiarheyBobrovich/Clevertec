@@ -1,8 +1,6 @@
 package by.bobrovich.market.entity;
 
-import by.bobrovich.market.api.DiscountCard;
-
-public class MarketDiscountCard implements DiscountCard {
+public class MarketDiscountCard {
 
     private Integer id;
     private Byte discount;
@@ -15,12 +13,10 @@ public class MarketDiscountCard implements DiscountCard {
         setDiscount(discount);
     }
 
-    @Override
     public int getId() {
         return id;
     }
 
-    @Override
     public byte getDiscount() {
         return discount;
     }
