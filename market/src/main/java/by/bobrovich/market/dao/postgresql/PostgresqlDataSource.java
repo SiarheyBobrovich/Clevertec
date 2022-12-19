@@ -13,7 +13,6 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 public class PostgresqlDataSource implements AutoCloseable {
-    private static final PostgresqlDataSource POSTGRESQL_DATA_SOURCE = new PostgresqlDataSource();
     private final DataSource dataSource;
     private final String driver;
     private final String url;
@@ -39,12 +38,16 @@ public class PostgresqlDataSource implements AutoCloseable {
         this.dataSource = getPool();
     }
 
+    private static final class PostgresqlDataSourceHolder {
+        private static final PostgresqlDataSource postgresqlDataSource = new PostgresqlDataSource();
+    }
+
     /**
      * Singleton's getter
      * @return - link to DataSource object
      */
     public static PostgresqlDataSource getInstance() {
-        return POSTGRESQL_DATA_SOURCE;
+        return PostgresqlDataSourceHolder.postgresqlDataSource;
     }
 
     /**

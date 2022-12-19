@@ -36,7 +36,7 @@ public class FileDiscountCardDao implements DiscountCardDao {
     }
 
     private void addCard(String row) {
-        if (!row.startsWith("ID")) {
+        if (row.matches("\\d+,\\d{1,3}")) {
             String[] split = row.split(",");
 
             int id = Integer.parseInt(split[0]);
