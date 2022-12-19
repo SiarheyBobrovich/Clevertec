@@ -1,4 +1,6 @@
 ## Test project for Clevertec
+- run: java -cp market/build/classes/java/main by.bobrovich.market.MarketApplication
+
 ##### Endpoints:
 - main: MarketApplication
   - You can see all id in resources
