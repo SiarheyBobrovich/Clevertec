@@ -5,7 +5,9 @@ import by.bobrovich.market.converter.api.OrderConverter;
 import by.bobrovich.market.data.MarketOrder;
 import by.bobrovich.market.data.MarketOrderEntry;
 import by.bobrovich.market.exceptions.ConvertionException;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ArgsOrderConverter implements OrderConverter<String[], Order> {
 
     @Override

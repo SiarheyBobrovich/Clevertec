@@ -10,10 +10,12 @@ import by.bobrovich.market.exceptions.ProductNotFoundException;
 import by.bobrovich.market.exceptions.ProductQuantityIsNotAvailable;
 import by.bobrovich.market.exceptions.ServiceNotAvailableNow;
 import by.bobrovich.market.factory.ReceiptFactory;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+@Service
 public class MarketService implements ProductService {
 
     private final OrderConverter<String[], Order> orderConverter;
@@ -51,6 +53,8 @@ public class MarketService implements ProductService {
     @Override
     public Receipt getReceipt(String[] args) {
         Order order = orderConverter.convert(args);
+        assert order != null;
+
         return getReceipt(order);
     }
 

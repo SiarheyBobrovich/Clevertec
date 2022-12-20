@@ -58,6 +58,10 @@ public class MarketApplication {
 		}
 	}
 
+	private static Map.Entry<String, String> splitArg(String arg) {
+		String[] strings = arg.split("-");
+		return Map.entry(strings[0], strings[1]);
+	}
 	private static ProductService initFromMemory() {
 		return new MarketService(
 				getOrderFactory(),
@@ -74,12 +78,16 @@ public class MarketApplication {
 				getReceiptFactory()
 		);
 	}
-	private static Map.Entry<String, String> splitArg(String arg) {
-		String[] strings = arg.split("-");
-		return Map.entry(strings[0], strings[1]);
-	}
+
+	/**
+	 * If you use postgresql, you will uncomment block
+	 * Returns Product card db
+	 * @param path file path [please see the resources/in_memory_products.csv]
+	 * @return product db
+	 */
 	public static ProductDao getProductDao(String path) {
 		if (path == null) {
+//			return new JdbcProductDao();
 			return new InMemoryProductDao();
 		}else {
 			try {
@@ -91,8 +99,16 @@ public class MarketApplication {
 		}
 		return null;
 	}
+
+	/**
+	 * If you use postgresql, you will uncomment block
+	 * Returns Discount card db
+	 * @param path file path [please see the resources/in_memory_discount_cards.csv]
+	 * @return discount card db
+	 */
 	public static DiscountCardDao getDiscountCardDao(String path) {
 		if (path == null) {
+//			return new JdbcDiscountCardDao();
 			return new InMemoryDiscountCardDao();
 		}else {
 			try {

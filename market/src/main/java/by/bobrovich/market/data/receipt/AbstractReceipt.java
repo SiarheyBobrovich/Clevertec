@@ -92,6 +92,8 @@ public abstract class AbstractReceipt implements Receipt {
             .append(blockSeparator)
             .append('\n')
             .append(getTotalBlock());
+        out.flush();
+        out.close();
     }
 
     protected String normalizeString(int length, String description) {

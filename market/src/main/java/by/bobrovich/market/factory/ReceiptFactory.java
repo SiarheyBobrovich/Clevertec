@@ -6,9 +6,11 @@ import by.bobrovich.market.data.receipt.MarketReceipt;
 import by.bobrovich.market.data.receipt.MarketDiscountReceipt;
 import by.bobrovich.market.decorator.BasketDiscountDecorator;
 import by.bobrovich.market.entity.MarketDiscountCard;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
+@Component
 public class ReceiptFactory {
     public Receipt create(Basket basket, MarketDiscountCard card, int cashier) {
         Receipt receipt;

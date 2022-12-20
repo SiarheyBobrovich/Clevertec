@@ -2,11 +2,12 @@ package by.bobrovich.market;
 
 import by.bobrovich.market.api.Receipt;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class UserTalker {
@@ -23,39 +24,18 @@ public class UserTalker {
         if (userAnswer == 1) {
             receipt.print(System.out);
         }else if (userAnswer == 2){
-            receipt.print(new OutputStreamWriter(Files.newOutputStream(talkAboutFilePath())));
+            Path tempFile = createTempFile();
+            receipt.print(new OutputStreamWriter(new FileOutputStream(tempFile.toFile())));
+            System.out.println("путь к файлу: " + tempFile);
         }
     }
 
     /**
-     * Returns path to existed and writable file
+     * Returns path to temp file
      * @return path to file
      */
-    private Path talkAboutFilePath() {
-        String s = """
-                Введите путь к файлу:;
-                """;
-        String userAnswer;
-        Path pathToFile;
-        boolean isExistAndWritable;
-
-        do {
-            System.out.println(s);
-            isExistAndWritable = true;
-            userAnswer = console.nextLine();
-            pathToFile = Paths.get(userAnswer);
-
-            if (Files.notExists(pathToFile)) {
-                System.out.println("Файл не существует");
-                isExistAndWritable = false;
-            } else if (!Files.isWritable(pathToFile)) {
-                System.out.println("В файл нельзя записать");
-                isExistAndWritable = false;
-            }
-
-        }while (!isExistAndWritable);
-
-        return pathToFile;
+    private Path createTempFile() throws IOException {
+        return Files.createTempFile(LocalDateTime.now().toString(), "-receipt.txt");
     }
 
     /**

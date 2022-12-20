@@ -2,13 +2,13 @@ plugins {
 	id 'java'
 	id 'jacoco'
 	id 'application'
-//	id 'org.springframework.boot' version '2.7.6'
+	id 'org.springframework.boot' version '2.7.6'
 //	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
 jar {
 	manifest {
-		attributes 'Main-Class': 'by.bobrovich.market.MarketApplication'
+		attributes 'Main-Class': 'by.bobrovich.market.SpringBootMarketApplication'
 	}
 }
 
@@ -22,7 +22,7 @@ repositories {
 
 
 dependencies {
-//	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-web:2.7.6'
 //	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.postgresql:postgresql:42.5.1'
 	implementation 'com.mchange:c3p0:0.9.5.5'
