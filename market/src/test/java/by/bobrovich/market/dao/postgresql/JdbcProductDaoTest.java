@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class JdbcProductDaoTest {
     private final JdbcProductDao dao = new JdbcProductDao();
-//    @ParameterizedTest
+ //   @ParameterizedTest
     @ValueSource(ints = {1, 5, 10, 20})
     void getById(int id) {
         MarketProduct product = dao.getById(id).orElse(null);
@@ -20,13 +20,13 @@ class JdbcProductDaoTest {
         assertNotNull(product.getPrice());
     }
 
-//    @ParameterizedTest
+    //@ParameterizedTest
     @ValueSource(ints = {1, 5, 10, 20})
     void exists(int id) {
         assertTrue(dao.exists(id));
     }
 
-//    @ParameterizedTest
+    //@ParameterizedTest
     @ValueSource(ints = {Integer.MIN_VALUE, 0, Integer.MAX_VALUE})
     void existsFailed(int id) {
         assertFalse(dao.exists(id));
@@ -35,12 +35,15 @@ class JdbcProductDaoTest {
 //    @ParameterizedTest
     @ValueSource(ints = {1, 5, 10, 20})
     void isExistsAndQuantityAvailable(int id) {
-        assertTrue(dao.isExistsAndQuantityAvailable(id, 1));
-        assertTrue(dao.isExistsAndQuantityAvailable(id, 5));
-        assertTrue(dao.isExistsAndQuantityAvailable(id, 10));
+        MarketProduct marketProduct = dao.getById(id).orElse(null);
+        assertNotNull(marketProduct);
+
+        assertTrue(dao.isExistsAndQuantityAvailable(id, marketProduct.getQuantity()));
+
+        assertTrue(dao.isExistsAndQuantityAvailable(id, 0));
     }
 
-//    @ParameterizedTest
+ //   @ParameterizedTest
     @ValueSource(ints = {1, 5, 10, 20})
     void isExistsAndQuantityAvailableFailed(int id) {
         assertFalse(dao.isExistsAndQuantityAvailable(id, 11));
@@ -48,7 +51,7 @@ class JdbcProductDaoTest {
         assertFalse(dao.isExistsAndQuantityAvailable(id, 25));
     }
 
-//    @Test
+ //   @Test
     void update() {
         MarketProduct product = dao.getById(1).orElse(null);
 

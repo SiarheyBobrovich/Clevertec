@@ -2,12 +2,14 @@ package by.bobrovich.market.dao.postgresql;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
+import javax.el.PropertyNotFoundException;
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -20,14 +22,20 @@ public class PostgresqlDataSource implements AutoCloseable {
     private final String password;
 
     private PostgresqlDataSource() {
-        String applicationProperties = "market/src/main/resources/application.properties";
+        Path applicationProperties = Paths.get("market/src/main/resources/application.properties");
+        Path applicationPropertiesTest = Paths.get("src/main/resources/application.properties");
+        Path dockerProperties = Paths.get("/app/application.properties");
 
-        Properties properties = new Properties();
-        try(BufferedReader reader = Files.newBufferedReader(Path.of(applicationProperties))) {
-            properties.load(reader);
+        Properties properties;
 
-        } catch (IOException e) {
-            throw new RuntimeException("Properties not found");
+        if (Files.exists(applicationProperties)) {
+            properties = loadProperties(applicationProperties);
+        }else if (Files.exists(applicationPropertiesTest)) {
+            properties = loadProperties(applicationPropertiesTest);
+        }else if (Files.exists(dockerProperties)) {
+            properties = loadProperties(dockerProperties);
+        }else {
+            throw new PropertyNotFoundException("Properties not found");
         }
 
         url = properties.getProperty("spring.datasource.url");
@@ -36,6 +44,18 @@ public class PostgresqlDataSource implements AutoCloseable {
         password = properties.getProperty("spring.datasource.password");
 
         this.dataSource = getPool();
+    }
+
+    private Properties loadProperties(Path applicationProperties) {
+        Properties properties = new Properties();
+        try(BufferedReader reader = Files.newBufferedReader(applicationProperties)) {
+            properties.load(reader);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Properties not found");
+        }
+
+        return properties;
     }
 
     private static final class PostgresqlDataSourceHolder {
