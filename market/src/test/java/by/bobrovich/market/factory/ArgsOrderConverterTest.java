@@ -22,6 +22,7 @@ class ArgsOrderConverterTest {
         Order order = factory.convert(strings);
 
         StringBuilder expected = new StringBuilder();
+        assert order != null;
         order.orderEntries().forEach(x->
                 expected.append(x.id())
                         .append("-")

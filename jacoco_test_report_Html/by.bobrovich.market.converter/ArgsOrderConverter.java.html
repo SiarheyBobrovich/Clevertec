@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ArgsOrderConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">market</a> &gt; <a href="index.source.html" class="el_package">by.bobrovich.market.converter</a> &gt; <span class="el_source">ArgsOrderConverter.java</span></div><h1>ArgsOrderConverter.java</h1><pre class="source lang-java linenums">package by.bobrovich.market.converter;
+
+import by.bobrovich.market.api.Order;
+import by.bobrovich.market.converter.api.OrderConverter;
+import by.bobrovich.market.data.MarketOrder;
+import by.bobrovich.market.data.MarketOrderEntry;
+import by.bobrovich.market.exceptions.ConvertionException;
+import org.springframework.stereotype.Component;
+
+@Component
+<span class="fc" id="L11">public class ArgsOrderConverter implements OrderConverter&lt;String[], Order&gt; {</span>
+
+    @Override
+    public Order convert(String[] args) {
+<span class="fc" id="L15">        check(args);</span>
+<span class="fc" id="L16">        MarketOrder.Builder orderBuilder = MarketOrder.builder();</span>
+
+<span class="fc bfc" id="L18" title="All 2 branches covered.">        for (String arg : args) {</span>
+<span class="fc" id="L19">            String[] keyValue = arg.split(&quot;-&quot;);</span>
+<span class="fc" id="L20">            String key = keyValue[0];</span>
+<span class="fc" id="L21">            int value = tryToParse(keyValue[1]);</span>
+
+<span class="fc bfc" id="L23" title="All 2 branches covered.">            if (isDigit(key)){</span>
+<span class="fc" id="L24">               orderBuilder.addOrderEntry(</span>
+                       new MarketOrderEntry(
+<span class="fc" id="L26">                           tryToParse(keyValue[0]),</span>
+<span class="fc" id="L27">                           value</span>
+                       )
+               );
+            } else {
+<span class="fc" id="L31">               orderBuilder.addDiscountCard(value);</span>
+            }
+        }
+
+<span class="fc" id="L35">        return orderBuilder.build();</span>
+    }
+
+    /**
+     * Check string as digits
+     * @param key - checked string
+     * @return true if digits
+     */
+    private boolean isDigit(String key) {
+<span class="fc" id="L44">        return key.matches(&quot;\\d+&quot;);</span>
+    }
+
+    private int tryToParse(String key) {
+        try {
+<span class="fc" id="L49">            return Integer.parseInt(key);</span>
+<span class="nc" id="L50">        }catch (NumberFormatException e) {</span>
+<span class="nc" id="L51">            throw new ConvertionException(&quot;Number must be as integer&quot;);</span>
+        }
+    }
+
+    private void check(String[] args) {
+<span class="fc bfc" id="L56" title="All 4 branches covered.">        if (args == null || args.length == 0) {</span>
+<span class="fc" id="L57">            throw new ConvertionException(&quot;Empty args&quot;);</span>
+        }
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        if (countItems(args) == 0) {</span>
+<span class="fc" id="L60">            throw new ConvertionException(&quot;Empty orders&quot;);</span>
+        }
+<span class="fc" id="L62">    }</span>
+
+    /**
+     * Check and count items
+     * @param args - String array
+     * @return - Count items
+     */
+    private int countItems(String[] args) {
+<span class="fc" id="L70">        int countOrders = 0;</span>
+
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        for (String arg : args) {</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">            if (isOrder(arg)) {</span>
+<span class="fc" id="L74">                countOrders++;</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">            }else if (!isCard(arg)) {</span>
+<span class="fc" id="L76">                throw new ConvertionException(&quot;Unsupported args&quot;);</span>
+            }
+        }
+<span class="fc" id="L79">        return countOrders;</span>
+    }
+
+    private boolean isOrder(String s) {
+<span class="fc" id="L83">        return s.matches(&quot;\\d+-\\d+&quot;);</span>
+    }
+
+    private boolean isCard(String s) {
+<span class="fc" id="L87">        return s.matches(&quot;card-\\d+&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

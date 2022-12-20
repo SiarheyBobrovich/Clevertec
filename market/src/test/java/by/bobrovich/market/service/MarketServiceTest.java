@@ -43,7 +43,6 @@ class MarketServiceTest {
         MarketReceipt receipt = (MarketReceipt)service.getReceipt(getOrder());
 
         String result = getRecieptAsString(receipt);
-        System.out.println(result);
 
         Assertions.assertTrue(result.contains("$1327.87"));
         Assertions.assertTrue(result.contains("$271.97"));
@@ -57,7 +56,6 @@ class MarketServiceTest {
         Receipt receipt = service.getReceipt(getOrderWithCard());
 
         String result = getRecieptAsString(receipt);
-        System.out.println(result);
 
         Assertions.assertTrue(result.contains("$1327.87"));
         Assertions.assertTrue(result.contains("$271.97"));

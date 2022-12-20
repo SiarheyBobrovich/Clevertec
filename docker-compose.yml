@@ -1,0 +1,23 @@
+version: '3.5'
+services:
+  db:
+    build: postgresql
+    image: market_postgresql:1.0.0
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 172143
+    volumes:
+      - /docker-entrypoint-initdb.d
+    networks:
+      - clevertec_ntwrk
+  market:
+      build: market
+      image: market:0.0.1
+      networks:
+        - clevertec_ntwrk
+      ports:
+        - "8080:8080"
+networks:
+  clevertec_ntwrk:
+      name: clevertec_ntwrk

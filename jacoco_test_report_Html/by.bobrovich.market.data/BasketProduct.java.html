@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BasketProduct.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">market</a> &gt; <a href="index.source.html" class="el_package">by.bobrovich.market.data</a> &gt; <span class="el_source">BasketProduct.java</span></div><h1>BasketProduct.java</h1><pre class="source lang-java linenums">package by.bobrovich.market.data;
+
+import java.math.BigDecimal;
+
+<span class="pc" id="L5">public record BasketProduct(int id, String description, BigDecimal price, int quantity, boolean isDiscount) {</span>
+
+    public static Builder builder() {
+<span class="fc" id="L8">        return new Builder();</span>
+    }
+
+    public static class Builder {
+        private int id;
+        private String description;
+        private BigDecimal price;
+        private int quantity;
+        private boolean isDiscount;
+
+        private Builder() {
+        }
+
+        public Builder setId(int id) {
+<span class="fc" id="L22">            this.id = id;</span>
+<span class="fc" id="L23">            return this;</span>
+        }
+
+        public Builder setDescription(String description) {
+<span class="fc" id="L27">            this.description = description;</span>
+<span class="fc" id="L28">            return this;</span>
+        }
+
+        public Builder setPrice(BigDecimal price) {
+<span class="fc" id="L32">            this.price = price;</span>
+<span class="fc" id="L33">            return this;</span>
+        }
+
+        public Builder setQuantity(int quantity) {
+<span class="fc" id="L37">            this.quantity = quantity;</span>
+<span class="fc" id="L38">            return this;</span>
+        }
+
+        public Builder setDiscount(boolean discount) {
+<span class="fc" id="L42">            isDiscount = discount;</span>
+<span class="fc" id="L43">            return this;</span>
+        }
+
+        public BasketProduct build() {
+<span class="fc" id="L47">            return new BasketProduct(</span>
+                    this.id,
+                    this.description,
+                    this.price,
+                    this.quantity,
+                    this.isDiscount
+            );
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -50,6 +50,9 @@ public class MarketProduct {
     }
 
     public void setQuantity(int quantity) {
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Quantity mus be 0 or more");
+        }
         this.quantity = quantity;
     }
 

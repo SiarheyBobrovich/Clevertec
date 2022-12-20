@@ -20,7 +20,7 @@ public class PostgresqlDataSource implements AutoCloseable {
     private final String password;
 
     private PostgresqlDataSource() {
-        String applicationProperties = "src/main/resources/application.properties";
+        String applicationProperties = "market/src/main/resources/application.properties";
 
         Properties properties = new Properties();
         try(BufferedReader reader = Files.newBufferedReader(Path.of(applicationProperties))) {

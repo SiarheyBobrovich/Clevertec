@@ -68,6 +68,6 @@ class JdbcProductDaoTest {
         updatedProduct.setQuantity(quantity);
         assertDoesNotThrow(() -> dao.update(updatedProduct));
 
-        assertTrue(dao.isExistsAndQuantityAvailable(1, 10));
+        assertTrue(dao.isExistsAndQuantityAvailable(1, quantity));
     }
 }

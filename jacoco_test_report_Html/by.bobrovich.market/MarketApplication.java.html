@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MarketApplication.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">market</a> &gt; <a href="index.source.html" class="el_package">by.bobrovich.market</a> &gt; <span class="el_source">MarketApplication.java</span></div><h1>MarketApplication.java</h1><pre class="source lang-java linenums">package by.bobrovich.market;
+
+import by.bobrovich.market.api.DiscountCardDao;
+import by.bobrovich.market.api.ProductDao;
+import by.bobrovich.market.api.ProductService;
+import by.bobrovich.market.api.Receipt;
+import by.bobrovich.market.api.Order;
+import by.bobrovich.market.converter.api.OrderConverter;
+import by.bobrovich.market.dao.FileDiscountCardDao;
+import by.bobrovich.market.dao.FileProductDao;
+import by.bobrovich.market.dao.InMemoryDiscountCardDao;
+import by.bobrovich.market.dao.InMemoryProductDao;
+import by.bobrovich.market.converter.ArgsOrderConverter;
+import by.bobrovich.market.exceptions.ConvertionException;
+import by.bobrovich.market.exceptions.DiscountCardNotFoundException;
+import by.bobrovich.market.exceptions.ProductNotFoundException;
+import by.bobrovich.market.factory.ReceiptFactory;
+import by.bobrovich.market.service.MarketService;
+import by.bobrovich.market.exceptions.ServiceNotAvailableNow;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Scanner;
+
+<span class="nc" id="L26">public class MarketApplication {</span>
+
+	public static void main(String[] args) {
+		ProductService productService;
+		Receipt receipt;
+
+<span class="nc bnc" id="L32" title="All 2 branches missed.">		if (args.length &gt;= 2) {</span>
+<span class="nc" id="L33">			Map.Entry&lt;String, String&gt; products = splitArg(args[0]);</span>
+<span class="nc" id="L34">			Map.Entry&lt;String, String&gt; cards = splitArg(args[1]);</span>
+
+<span class="nc bnc" id="L36" title="All 4 branches missed.">			if (&quot;products&quot;.equals(products.getKey()) &amp;&amp; &quot;cards&quot;.equals(cards.getKey())) {</span>
+<span class="nc" id="L37">				productService = initFromFiles(products.getValue(), cards.getValue());</span>
+<span class="nc" id="L38">				args = Arrays.copyOfRange(args, 2, args.length);</span>
+			}else {
+<span class="nc" id="L40">				productService = initFromMemory();</span>
+			}
+<span class="nc" id="L42">		}else {</span>
+<span class="nc" id="L43">			productService = initFromMemory();</span>
+		}
+
+		try {
+<span class="nc" id="L47">			receipt = productService.getReceipt(args);</span>
+<span class="nc" id="L48">		}catch (ConvertionException | DiscountCardNotFoundException |</span>
+				ProductNotFoundException | ServiceNotAvailableNow e) {
+<span class="nc" id="L50">			System.out.println(e.getMessage());</span>
+<span class="nc" id="L51">			return;</span>
+<span class="nc" id="L52">		}</span>
+
+		try {
+<span class="nc" id="L55">			new UserTalker(new Scanner(System.in)).talkAboutReceipt(receipt);</span>
+<span class="nc" id="L56">		} catch (IOException e) {</span>
+<span class="nc" id="L57">			System.out.println(&quot;Something went wrong.&quot;);</span>
+<span class="nc" id="L58">		}</span>
+<span class="nc" id="L59">	}</span>
+
+	private static Map.Entry&lt;String, String&gt; splitArg(String arg) {
+<span class="nc" id="L62">		String[] strings = arg.split(&quot;-&quot;);</span>
+<span class="nc" id="L63">		return Map.entry(strings[0], strings[1]);</span>
+	}
+	private static ProductService initFromMemory() {
+<span class="nc" id="L66">		return new MarketService(</span>
+<span class="nc" id="L67">				getOrderFactory(),</span>
+<span class="nc" id="L68">				getProductDao(null),</span>
+<span class="nc" id="L69">				getDiscountCardDao(null),</span>
+<span class="nc" id="L70">				getReceiptFactory()</span>
+		);
+	}
+	private static ProductService initFromFiles(String productsPath, String cardsPath) {
+<span class="nc" id="L74">		return new MarketService(</span>
+<span class="nc" id="L75">			getOrderFactory(),</span>
+<span class="nc" id="L76">				getProductDao(productsPath),</span>
+<span class="nc" id="L77">				getDiscountCardDao(cardsPath),</span>
+<span class="nc" id="L78">				getReceiptFactory()</span>
+		);
+	}
+
+	/**
+	 * If you use postgresql, you will uncomment block
+	 * Returns Product card db
+	 * @param path file path [please see the resources/in_memory_products.csv]
+	 * @return product db
+	 */
+	public static ProductDao getProductDao(String path) {
+<span class="nc bnc" id="L89" title="All 2 branches missed.">		if (path == null) {</span>
+//			return new JdbcProductDao();
+<span class="nc" id="L91">			return new InMemoryProductDao();</span>
+		}else {
+			try {
+<span class="nc" id="L94">				return new FileProductDao(path);</span>
+<span class="nc" id="L95">			}catch (IOException e) {</span>
+<span class="nc" id="L96">				System.out.println(e.getMessage());</span>
+<span class="nc" id="L97">				System.exit(0);</span>
+			}
+		}
+<span class="nc" id="L100">		return null;</span>
+	}
+
+	/**
+	 * If you use postgresql, you will uncomment block
+	 * Returns Discount card db
+	 * @param path file path [please see the resources/in_memory_discount_cards.csv]
+	 * @return discount card db
+	 */
+	public static DiscountCardDao getDiscountCardDao(String path) {
+<span class="nc bnc" id="L110" title="All 2 branches missed.">		if (path == null) {</span>
+//			return new JdbcDiscountCardDao();
+<span class="nc" id="L112">			return new InMemoryDiscountCardDao();</span>
+		}else {
+			try {
+<span class="nc" id="L115">				return new FileDiscountCardDao(path);</span>
+<span class="nc" id="L116">			}catch (IOException e) {</span>
+<span class="nc" id="L117">				System.out.println(e.getMessage());</span>
+<span class="nc" id="L118">				System.exit(0);</span>
+			}
+		}
+<span class="nc" id="L121">		return null;</span>
+	}
+	public static OrderConverter&lt;String[], Order&gt; getOrderFactory() {
+<span class="nc" id="L124">		return new ArgsOrderConverter();</span>
+	}
+	public static ReceiptFactory getReceiptFactory() {
+<span class="nc" id="L127">		return new ReceiptFactory();</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>
