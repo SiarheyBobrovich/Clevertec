@@ -9,12 +9,13 @@ import java.util.Map;
 import java.util.Optional;
 
 public class InMemoryProductDao implements ProductDao {
-    private final Map<Integer, MarketProduct> products;
+    protected final Map<Integer, MarketProduct> products;
 
     public InMemoryProductDao() {
         this.products = new HashMap<>();
         init();
     }
+
 
     @Override
     public Optional<MarketProduct> getById(Integer id) {

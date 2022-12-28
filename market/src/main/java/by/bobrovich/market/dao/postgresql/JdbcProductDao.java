@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class JdbcProductDao implements ProductDao {
 
-    private final PostgresqlDataSource dataSource;
+    protected final PostgresqlDataSource dataSource;
 
     public JdbcProductDao() {
         this.dataSource = PostgresqlDataSource.getInstance();
