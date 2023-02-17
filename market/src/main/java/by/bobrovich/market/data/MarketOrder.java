@@ -6,6 +6,7 @@ import by.bobrovich.market.api.OrderEntry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public record MarketOrder(List<OrderEntry> orderEntries, Integer discountCardNumber) implements Order {
 
@@ -37,11 +38,21 @@ public record MarketOrder(List<OrderEntry> orderEntries, Integer discountCardNum
         private List<OrderEntry> orderEntries;
         private Integer discountCardNumber;
 
+        Builder() {
+            orderEntries = new ArrayList<>();
+        }
+
         public Builder addOrderEntry(OrderEntry entry) {
-            if(orderEntries == null) {
-                orderEntries = new ArrayList<>();
-            }
-            orderEntries.add(entry);
+            this.orderEntries.add(entry);
+            return this;
+        }
+
+        public Builder addItemsId(List<Integer> itemsId) {
+            itemsId.stream()
+                    .collect(Collectors.groupingBy(x -> x, Collectors.counting()))
+                    .entrySet().stream()
+                    .map(id -> new MarketOrderEntry(id.getKey(), id.getValue().intValue()))
+                    .forEach(orderEntry -> this.orderEntries.add(orderEntry));
             return this;
         }
 

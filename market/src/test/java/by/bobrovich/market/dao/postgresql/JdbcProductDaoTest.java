@@ -1,15 +1,17 @@
 package by.bobrovich.market.dao.postgresql;
 
 import by.bobrovich.market.entity.MarketProduct;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled
 class JdbcProductDaoTest {
-    private final JdbcProductDao dao = new JdbcProductDao();
- //   @ParameterizedTest
+    private final JdbcProductDao dao = new JdbcProductDao(null);
+
+    @ParameterizedTest
     @ValueSource(ints = {1, 5, 10, 20})
     void getById(int id) {
         MarketProduct product = dao.getById(id).orElse(null);

@@ -6,5 +6,4 @@ import java.io.PrintStream;
 
 public interface Receipt {
     void print(PrintStream out);
-    void print(OutputStreamWriter out) throws IOException;
 }

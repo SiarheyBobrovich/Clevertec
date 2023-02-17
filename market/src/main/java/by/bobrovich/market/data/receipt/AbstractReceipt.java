@@ -83,19 +83,6 @@ public abstract class AbstractReceipt implements Receipt {
         out.println(getTotalBlock());
     }
 
-    @Override
-    public void print(OutputStreamWriter out) throws IOException {
-        out.append(getTitle())
-            .append(blockSeparator)
-            .append('\n')
-            .append(getBody())
-            .append(blockSeparator)
-            .append('\n')
-            .append(getTotalBlock());
-        out.flush();
-        out.close();
-    }
-
     protected String normalizeString(int length, String description) {
         int currentLength = description.length();
         String result;

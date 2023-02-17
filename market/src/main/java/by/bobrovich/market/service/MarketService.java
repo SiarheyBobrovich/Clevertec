@@ -1,7 +1,6 @@
 package by.bobrovich.market.service;
 
 import by.bobrovich.market.api.*;
-import by.bobrovich.market.converter.api.OrderConverter;
 import by.bobrovich.market.data.MarketBasket;
 import by.bobrovich.market.entity.MarketDiscountCard;
 import by.bobrovich.market.entity.MarketProduct;
@@ -10,24 +9,28 @@ import by.bobrovich.market.exceptions.ProductNotFoundException;
 import by.bobrovich.market.exceptions.ProductQuantityIsNotAvailable;
 import by.bobrovich.market.exceptions.ServiceNotAvailableNow;
 import by.bobrovich.market.factory.ReceiptFactory;
+import by.bobrovich.market.service.api.ProductService;
+import by.bobrovich.market.validation.ValidOrder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
 @Service
+@Validated
 public class MarketService implements ProductService {
 
-    private final OrderConverter<String[], Order> orderConverter;
     private final ProductDao productDao;
     private final DiscountCardDao discountCardDao;
     private final ReceiptFactory receiptFactory;
     private final Semaphore semaphore = new Semaphore(1);
 
-    public MarketService(OrderConverter<String[], Order> orderConverter,
-                         ProductDao productDao,
-                         DiscountCardDao discountCardDao, ReceiptFactory receiptFactory) {
-        this.orderConverter = orderConverter;
+    @Autowired
+    public MarketService(ProductDao productDao,
+                         DiscountCardDao discountCardDao,
+                         ReceiptFactory receiptFactory) {
         this.productDao = productDao;
         this.discountCardDao = discountCardDao;
         this.receiptFactory = receiptFactory;
@@ -50,22 +53,13 @@ public class MarketService implements ProductService {
         return receiptFactory.create(basket, discountCard, 1234);
     }
 
-    @Override
-    public Receipt getReceipt(String[] args) {
-        Order order = orderConverter.convert(args);
-        assert order != null;
-
-        return getReceipt(order);
-    }
-
     public void updateProduct(MarketProduct product) {
         productDao.update(product);
     }
 
     private MarketDiscountCard getDiscountCardFromDao(Integer discountCardNumber) {
-        return discountCardNumber != null ?
-                discountCardDao.getById(discountCardNumber)
-                        .orElseThrow(() -> new DiscountCardNotFoundException(discountCardNumber)) :
+        return discountCardNumber != null ? discountCardDao.getById(discountCardNumber)
+                .orElseThrow(() -> new DiscountCardNotFoundException(discountCardNumber)) :
                 null;
     }
 

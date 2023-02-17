@@ -23,7 +23,6 @@ class ThreadsMarketServiceTest {
 
     static {
         service = new MarketService(
-                null,
                 new InMemoryProductDao(),
                 new InMemoryDiscountCardDao(),
                 new ReceiptFactory()
@@ -66,7 +65,7 @@ class ThreadsMarketServiceTest {
 
     private Order getThreadOrder() {
         return MarketOrder.builder()
-                .addOrderEntry(new MarketOrderEntry(500, 1))
+                .addItemsId(List.of(500))
                 .build();
     }
 }

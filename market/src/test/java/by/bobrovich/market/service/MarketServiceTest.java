@@ -29,7 +29,6 @@ class MarketServiceTest {
         productDao = Mockito.mock(InMemoryProductDao.class);
         discountDao = Mockito.mock(InMemoryDiscountCardDao.class);
         service = new MarketService(
-                null,
                 productDao,
                 discountDao,
                 new ReceiptFactory()

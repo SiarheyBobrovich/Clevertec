@@ -2,9 +2,12 @@ package by.bobrovich.market.dao.postgresql;
 
 import by.bobrovich.market.api.ProductDao;
 import by.bobrovich.market.entity.MarketProduct;
-import static by.bobrovich.market.dao.postgresql.ProductQueryUtil.SELECT_PRODUCT_BY_ID_QUERY;
-import static by.bobrovich.market.dao.postgresql.ProductQueryUtil.SELECT_PRODUCT_BY_ID_AND_QUANTITY_QUERY;
-import static by.bobrovich.market.dao.postgresql.ProductQueryUtil.UPDATE_PRODUCT_QUERY;
+
+import javax.sql.DataSource;
+
+import static by.bobrovich.market.dao.postgresql.util.ProductQueryUtil.SELECT_PRODUCT_BY_ID_QUERY;
+import static by.bobrovich.market.dao.postgresql.util.ProductQueryUtil.SELECT_PRODUCT_BY_ID_AND_QUANTITY_QUERY;
+import static by.bobrovich.market.dao.postgresql.util.ProductQueryUtil.UPDATE_PRODUCT_QUERY;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,10 +17,10 @@ import java.util.Optional;
 
 public class JdbcProductDao implements ProductDao {
 
-    protected final PostgresqlDataSource dataSource;
+    protected final DataSource dataSource;
 
-    public JdbcProductDao() {
-        this.dataSource = PostgresqlDataSource.getInstance();
+    public JdbcProductDao(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     @Override
@@ -80,7 +83,6 @@ public class JdbcProductDao implements ProductDao {
             throw new IllegalStateException("Data base is not available");
         }
     }
-
 
     private MarketProduct map(ResultSet resultSet) throws SQLException {
         if (!resultSet.next()) {

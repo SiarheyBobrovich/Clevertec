@@ -1,9 +1,15 @@
 plugins {
-	id 'java'
 	id 'jacoco'
 	id 'application'
-	id 'org.springframework.boot' version '2.7.6'
-//	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'by.bobrovich'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
 }
 
 jar {
@@ -12,29 +18,27 @@ jar {
 	}
 }
 
-group = 'by.bobrovich'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
-
 repositories {
+	mavenLocal()
 	mavenCentral()
 }
 
-
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web:2.7.6'
-//	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	implementation 'org.postgresql:postgresql:42.5.1'
+	implementation 'org.springframework.boot:spring-boot-starter-validation:2.7.6'
 	implementation 'com.mchange:c3p0:0.9.5.5'
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
+	implementation 'org.postgresql:postgresql:42.5.1'
 	testImplementation 'org.junit.jupiter:junit-jupiter-params:5.9.1'
-	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
+	testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
 	testImplementation 'org.mockito:mockito-core:4.9.0'
 }
 
-
 tasks.named('test') {
+	finalizedBy(jacocoTestReport)
 	useJUnitPlatform()
+}
+
+tasks.named("jacocoTestReport") {
 	jacocoTestReport {
 		reports {
 			xml.required = false

@@ -3,22 +3,33 @@ package by.bobrovich.market.dao;
 import by.bobrovich.market.api.ProductDao;
 import by.bobrovich.market.entity.MarketProduct;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class FileProductDao implements ProductDao {
     private final Map<Integer, MarketProduct> products;
 
     public FileProductDao(String fileName) throws IOException {
-        this.products = new HashMap<>();
-        init(fileName);
+        final Path path = Paths.get(fileName);
+        final List<String> lines = Files.readAllLines(path);
+
+        products = lines.stream()
+                .filter(fileLine -> !fileLine.startsWith("ID"))
+                .map(line -> line.split(","))
+                .map(strings -> new MarketProduct(
+                        Integer.parseInt(strings[0]),
+                        strings[1],
+                        new BigDecimal(strings[2]),
+                        Integer.parseInt(strings[3]),
+                        Boolean.parseBoolean(strings[4])))
+                .collect(Collectors.toMap(MarketProduct::getId, x -> x));
     }
 
     @Override
@@ -39,37 +50,5 @@ public class FileProductDao implements ProductDao {
     @Override
     public void update(MarketProduct product) {
         products.put(product.getId(), product);
-    }
-
-    private void init(String fileName) throws IOException {
-        Path path = Paths.get(fileName);
-        BufferedReader reader = new BufferedReader(new FileReader(path.toFile()));
-
-        String fileLine;
-        while ((fileLine = reader.readLine()) != null) {
-            if (!fileLine.startsWith("ID")) {
-                String[] args = fileLine.split(",");
-                addProduct(args);
-            }
-        }
-    }
-
-    private void addProduct(String[] args) {
-        int id = Integer.parseInt(args[0]);
-        String description = args[1];
-        BigDecimal price = new BigDecimal(args[2]);
-        int quantity = Integer.parseInt(args[3]);
-        boolean isDiscount = Boolean.parseBoolean(args[4]);
-
-        products.put(
-                id,
-                new MarketProduct(
-                        id,
-                        description,
-                        price,
-                        quantity,
-                        isDiscount
-                )
-        );
     }
 }

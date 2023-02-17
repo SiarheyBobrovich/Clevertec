@@ -3,49 +3,33 @@ package by.bobrovich.market.dao;
 import by.bobrovich.market.api.DiscountCardDao;
 import by.bobrovich.market.entity.MarketDiscountCard;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class FileDiscountCardDao implements DiscountCardDao {
 
     private final Map<Integer, MarketDiscountCard> discountCardMap;
-    public FileDiscountCardDao(String filename) throws IOException {
-        discountCardMap = new HashMap<>();
-        init(filename);
+    public FileDiscountCardDao(String fileName) throws IOException {
+        final Path path = Paths.get(fileName);
+        final List<String> lines = Files.readAllLines(path);
+
+        discountCardMap = lines.stream()
+                .filter(row -> row.matches("\\d+,\\d{1,3}"))
+                .map(line -> line.split(","))
+                .map(strings -> new MarketDiscountCard(
+                        Integer.parseInt(strings[0]),
+                        Byte.parseByte(strings[1])))
+                .collect(Collectors.toMap(MarketDiscountCard::getId, x -> x));
     }
 
     @Override
     public Optional<MarketDiscountCard> getById(Integer id) {
         return Optional.ofNullable(discountCardMap.get(id));
-    }
-
-    private void init(String fileName) throws IOException {
-        Path path = Paths.get(fileName);
-        BufferedReader reader = new BufferedReader(new FileReader(path.toFile()));
-
-        String fileLine;
-        while ((fileLine = reader.readLine()) != null) {
-            addCard(fileLine);
-        }
-    }
-
-    private void addCard(String row) {
-        if (row.matches("\\d+,\\d{1,3}")) {
-            String[] split = row.split(",");
-
-            int id = Integer.parseInt(split[0]);
-            byte discount = Byte.parseByte(split[1]);
-
-            discountCardMap.put(
-                    id,
-                    new MarketDiscountCard(id, discount)
-            );
-        }
     }
 }

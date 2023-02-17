@@ -1,4 +1,4 @@
-package by.bobrovich.market.dao.postgresql;
+package by.bobrovich.market.dao.postgresql.util;
 
 public class ProductQueryUtil {
 

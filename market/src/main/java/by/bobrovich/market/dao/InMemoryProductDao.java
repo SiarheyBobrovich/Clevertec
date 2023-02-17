@@ -3,19 +3,21 @@ package by.bobrovich.market.dao;
 import by.bobrovich.market.api.ProductDao;
 import by.bobrovich.market.entity.MarketProduct;
 
+import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class InMemoryProductDao implements ProductDao {
     protected final Map<Integer, MarketProduct> products;
 
     public InMemoryProductDao() {
-        this.products = new HashMap<>();
-        init();
+        MarketProduct[] productsArray = getProductsArray();
+        this.products = Arrays.stream(productsArray)
+                .collect(Collectors.toMap(MarketProduct::getId, x -> x));
     }
-
 
     @Override
     public Optional<MarketProduct> getById(Integer id) {
@@ -29,18 +31,14 @@ public class InMemoryProductDao implements ProductDao {
 
     @Override
     public boolean isExistsAndQuantityAvailable(Integer id, Integer quantity) {
-        return quantity >= 0 && products.containsKey(id) && products.get(id).getQuantity() >= quantity;
+        return quantity >= 0 &&
+                products.containsKey(id) &&
+                products.get(id).getQuantity() >= quantity;
     }
 
     @Override
     public void update(MarketProduct product) {
         products.put(product.getId(), product);
-    }
-
-    private void init() {
-        for (MarketProduct product : getProductsArray()) {
-            products.put(product.getId(), product);
-        }
     }
 
     private MarketProduct[] getProductsArray() {

@@ -2,7 +2,10 @@ package by.bobrovich.market.dao.postgresql;
 
 import by.bobrovich.market.api.DiscountCardDao;
 import by.bobrovich.market.entity.MarketDiscountCard;
-import static by.bobrovich.market.dao.postgresql.DiscountCardQueryUtil.SELECT_DISCOUNT_CARD_BY_ID_QUERY;
+
+import javax.sql.DataSource;
+
+import static by.bobrovich.market.dao.postgresql.util.DiscountCardQueryUtil.SELECT_DISCOUNT_CARD_BY_ID_QUERY;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,10 +15,10 @@ import java.util.Optional;
 
 public class JdbcDiscountCardDao implements DiscountCardDao {
 
-    private final PostgresqlDataSource dataSource;
+    private final DataSource dataSource;
 
-    public JdbcDiscountCardDao() {
-        this.dataSource = PostgresqlDataSource.getInstance();
+    public JdbcDiscountCardDao(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     @Override
