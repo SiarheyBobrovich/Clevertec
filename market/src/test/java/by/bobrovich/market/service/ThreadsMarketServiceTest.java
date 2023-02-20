@@ -1,26 +1,27 @@
 package by.bobrovich.market.service;
 
-import by.bobrovich.market.api.Order;
 import by.bobrovich.market.dao.InMemoryDiscountCardDao;
 import by.bobrovich.market.dao.InMemoryProductDao;
 import by.bobrovich.market.data.MarketOrder;
 import by.bobrovich.market.exceptions.ProductQuantityIsNotAvailable;
 import by.bobrovich.market.factory.ReceiptFactory;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 class ThreadsMarketServiceTest {
-    private static final MarketService service;
+    private static MarketService service;
     private final AtomicInteger count = new AtomicInteger(0);
     private final AtomicInteger failedCount = new AtomicInteger(0);
 
-
-    static {
+    @BeforeAll
+    static void init() {
         service = new MarketService(
                 new InMemoryProductDao(),
                 new InMemoryDiscountCardDao(),
@@ -31,18 +32,11 @@ class ThreadsMarketServiceTest {
     @Test
     void getBillWithoutCardThreads() {
         int threadCount = 600;
-        List<Thread> threads = new ArrayList<>();
-        for (int i = 0; i < threadCount; i++) {
-            threads.add(new Thread(getRunnable(), "Thread: " + i));
-        }
-
+        Set<Thread> threads = Stream.generate(() -> new Thread(getRunnable()))
+                .limit(threadCount)
+                .collect(Collectors.toSet());
         threads.forEach(Thread::start);
-        long threadAlive;
-
-        do {
-            threads = threads.stream().filter(Thread::isAlive).collect(Collectors.toList());
-            threadAlive = threads.size();
-        }while (threadAlive != 0);
+        while (threads.stream().anyMatch(Thread::isAlive)){}
 
         Assertions.assertEquals(500, count.get());
         Assertions.assertEquals(threadCount - 500, failedCount.get());
@@ -51,7 +45,9 @@ class ThreadsMarketServiceTest {
     private Runnable getRunnable() {
         return () -> {
             try {
-                service.getReceipt(getThreadOrder());
+                service.getReceipt(MarketOrder.builder()
+                        .addItemsId(List.of(500))
+                        .build());
 
             }catch (ProductQuantityIsNotAvailable e) {
                 failedCount.incrementAndGet();
@@ -60,11 +56,5 @@ class ThreadsMarketServiceTest {
 
             count.incrementAndGet();
         };
-    }
-
-    private Order getThreadOrder() {
-        return MarketOrder.builder()
-                .addItemsId(List.of(500))
-                .build();
     }
 }

@@ -3,40 +3,28 @@ package by.bobrovich.market.factory;
 import by.bobrovich.market.api.Receipt;
 import by.bobrovich.market.data.MarketBasket;
 import by.bobrovich.market.entity.MarketDiscountCard;
-import by.bobrovich.market.entity.MarketProduct;
+import by.bobrovich.market.util.MarketBasketBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ReceiptFactoryTest {
-    private Receipt marketReceipt;
-    private Receipt marketDiscountReceipt;
+    private ReceiptFactory receiptFactory;
 
     @BeforeEach
     void setUp() {
-        ReceiptFactory receiptFactory = new ReceiptFactory();
-        MarketProduct product = new MarketProduct(
-                132,
-                "description",
-                BigDecimal.valueOf(12.123),
-                15,
-                true
-        );
-        MarketBasket marketBasket = new MarketBasket();
-        marketBasket.addProduct(product, 99);
-        marketReceipt = receiptFactory.create(marketBasket, null, 1234);
-
-        MarketDiscountCard discountCard = new MarketDiscountCard(10, (byte) 10);
-        marketDiscountReceipt = receiptFactory.create(marketBasket, discountCard, 1234);
+        receiptFactory = new ReceiptFactory();
     }
 
     @Test
     void checkCreateMarketReceiptContainsQty() {
+        MarketBasket marketBasket = MarketBasketBuilder.builder().build();
+        Receipt marketReceipt = receiptFactory.create(marketBasket, null, 1234);
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         marketReceipt.print(new PrintStream(outputStream));
         String printedReceipt = outputStream.toString();
@@ -45,6 +33,9 @@ class ReceiptFactoryTest {
     }
     @Test
     void checkCreateMarketReceiptContainsDescription() {
+        MarketBasket marketBasket = MarketBasketBuilder.builder().build();
+        Receipt marketReceipt = receiptFactory.create(marketBasket, null, 1234);
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         marketReceipt.print(new PrintStream(outputStream));
         String printedReceipt = outputStream.toString();
@@ -53,6 +44,9 @@ class ReceiptFactoryTest {
     }
     @Test
     void checkCreateMarketReceiptContainsPrice() {
+        MarketBasket marketBasket = MarketBasketBuilder.builder().build();
+        Receipt marketReceipt = receiptFactory.create(marketBasket, null, 1234);
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         marketReceipt.print(new PrintStream(outputStream));
         String printedReceipt = outputStream.toString();
@@ -61,6 +55,9 @@ class ReceiptFactoryTest {
     }
     @Test
     void checkCreateMarketReceiptContainsTaxableTot() {
+        MarketBasket marketBasket = MarketBasketBuilder.builder().build();
+        Receipt marketReceipt = receiptFactory.create(marketBasket, null, 1234);
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         marketReceipt.print(new PrintStream(outputStream));
         String printedReceipt = outputStream.toString();
@@ -69,6 +66,9 @@ class ReceiptFactoryTest {
     }
     @Test
     void checkCreateMarketReceiptContainsVat() {
+        MarketBasket marketBasket = MarketBasketBuilder.builder().build();
+        Receipt marketReceipt = receiptFactory.create(marketBasket, null, 1234);
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         marketReceipt.print(new PrintStream(outputStream));
         String printedReceipt = outputStream.toString();
@@ -77,8 +77,11 @@ class ReceiptFactoryTest {
     }
     @Test
     void checkCreateMarketReceiptContainsTotal() {
+        MarketBasket marketBasket = MarketBasketBuilder.builder().build();
+        Receipt marketReceipt = receiptFactory.create(marketBasket, null, 1234);
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        marketDiscountReceipt.print(new PrintStream(outputStream));
+        marketReceipt.print(new PrintStream(outputStream));
         String printedReceipt = outputStream.toString();
 
         assertTrue(printedReceipt.contains("$1200.18"));
@@ -87,6 +90,10 @@ class ReceiptFactoryTest {
 //////////////////////////////////////////////////////////////////////////
     @Test
     void checkCreateMarketDiscountReceiptContainsQty() {
+        MarketBasket marketBasket = MarketBasketBuilder.builder().build();
+        MarketDiscountCard discountCard = new MarketDiscountCard(10, (byte) 10);
+        Receipt marketDiscountReceipt = receiptFactory.create(marketBasket, discountCard, 1234);
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         marketDiscountReceipt.print(new PrintStream(outputStream));
         String printedReceipt = outputStream.toString();
@@ -95,6 +102,10 @@ class ReceiptFactoryTest {
     }
     @Test
     void checkCreateMarketDiscountReceiptContainsDescription() {
+        MarketBasket marketBasket = MarketBasketBuilder.builder().build();
+        MarketDiscountCard discountCard = new MarketDiscountCard(10, (byte) 10);
+        Receipt marketDiscountReceipt = receiptFactory.create(marketBasket, discountCard, 1234);
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         marketDiscountReceipt.print(new PrintStream(outputStream));
         String printedReceipt = outputStream.toString();
@@ -103,6 +114,10 @@ class ReceiptFactoryTest {
     }
     @Test
     void checkCreateMarketDiscountReceiptContainsPrice() {
+        MarketBasket marketBasket = MarketBasketBuilder.builder().build();
+        MarketDiscountCard discountCard = new MarketDiscountCard(10, (byte) 10);
+        Receipt marketDiscountReceipt = receiptFactory.create(marketBasket, discountCard, 1234);
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         marketDiscountReceipt.print(new PrintStream(outputStream));
         String printedReceipt = outputStream.toString();
@@ -111,6 +126,10 @@ class ReceiptFactoryTest {
     }
     @Test
     void checkCreateMarketDiscountReceiptContainsTaxableTot() {
+        MarketBasket marketBasket = MarketBasketBuilder.builder().build();
+        MarketDiscountCard discountCard = new MarketDiscountCard(10, (byte) 10);
+        Receipt marketDiscountReceipt = receiptFactory.create(marketBasket, discountCard, 1234);
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         marketDiscountReceipt.print(new PrintStream(outputStream));
         String printedReceipt = outputStream.toString();
@@ -119,6 +138,10 @@ class ReceiptFactoryTest {
     }
     @Test
     void checkCreateMarketDiscountReceiptContainsVat() {
+        MarketBasket marketBasket = MarketBasketBuilder.builder().build();
+        MarketDiscountCard discountCard = new MarketDiscountCard(10, (byte) 10);
+        Receipt marketDiscountReceipt = receiptFactory.create(marketBasket, discountCard, 1234);
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         marketDiscountReceipt.print(new PrintStream(outputStream));
         String printedReceipt = outputStream.toString();
@@ -127,6 +150,10 @@ class ReceiptFactoryTest {
     }
     @Test
     void checkCreateMarketDiscountReceiptContainsDiscount() {
+        MarketBasket marketBasket = MarketBasketBuilder.builder().build();
+        MarketDiscountCard discountCard = new MarketDiscountCard(10, (byte) 10);
+        Receipt marketDiscountReceipt = receiptFactory.create(marketBasket, discountCard, 1234);
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         marketDiscountReceipt.print(new PrintStream(outputStream));
         String printedReceipt = outputStream.toString();
@@ -135,6 +162,10 @@ class ReceiptFactoryTest {
     }
     @Test
     void checkCreateMarketDiscountReceiptContainsTotal() {
+        MarketBasket marketBasket = MarketBasketBuilder.builder().build();
+        MarketDiscountCard discountCard = new MarketDiscountCard(10, (byte) 10);
+        Receipt marketDiscountReceipt = receiptFactory.create(marketBasket, discountCard, 1234);
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         marketDiscountReceipt.print(new PrintStream(outputStream));
         String printedReceipt = outputStream.toString();

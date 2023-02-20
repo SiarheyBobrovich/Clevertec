@@ -16,13 +16,14 @@ import by.bobrovich.market.exceptions.DiscountCardNotFoundException;
 import by.bobrovich.market.exceptions.ProductNotFoundException;
 import by.bobrovich.market.exceptions.ProductQuantityIsNotAvailable;
 import by.bobrovich.market.factory.ReceiptFactory;
+import by.bobrovich.market.util.DiscountCardBuilder;
+import by.bobrovich.market.util.MarketProductBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -51,17 +52,17 @@ class MarketServiceTest {
 
     @Test
     void checkGetReceiptMarketReceipt() {
-        int productId = 1;
-        int productQty = 1;
-        MarketBasket basket = new MarketBasket();
-        MarketProduct product = new MarketProduct(productId, "first", BigDecimal.valueOf(11.11), 10, false);
-        Order order = MarketOrder.builder().addOrderEntry(new MarketOrderEntry(productId, productQty)).build();
-        MarketReceipt expectedReceipt = new MarketReceipt(LocalDateTime.now(), basket, 1234);
+        MarketProduct product = MarketProductBuilder.builder().build();
+        Order order = MarketOrder.builder()
+                .addOrderEntry(new MarketOrderEntry(product.getId(), product.getQuantity()))
+                .build();
+        MarketReceipt expectedReceipt = new MarketReceipt(LocalDateTime.now(), new MarketBasket(), 1234);
 
-        when(productDao.exists(1)).thenReturn(true);
-        when(productDao.isExistsAndQuantityAvailable(productId, productQty)).thenReturn(true);
-        doReturn(Optional.of(product)).when(productDao).getById(productId);
-        when(receiptFactory.create(any(), any(), anyInt())).thenReturn(expectedReceipt);
+        doReturn(true).when(productDao).exists(product.getId());
+        doReturn(true).when(productDao)
+                .isExistsAndQuantityAvailable(product.getId(), product.getQuantity());
+        doReturn(Optional.of(product)).when(productDao).getById(product.getId());
+        doReturn(expectedReceipt).when(receiptFactory).create(any(), any(), anyInt());
 
         Receipt receipt = service.getReceipt(order);
 
@@ -70,20 +71,22 @@ class MarketServiceTest {
 
     @Test
     void checkGetReceiptMarketDiscountReceipt() {
-        int discountCardNumber = 1234;
-        int productId = 1;
-        int productQty = 1;
         BasketDiscountDecorator basketDiscountDecorator = new BasketDiscountDecorator(new MarketBasket());
-        MarketDiscountCard discountCard = new MarketDiscountCard(discountCardNumber, (byte)10);
-        MarketProduct product = new MarketProduct(productId, "first", BigDecimal.valueOf(11.11), productQty, true);
-        Order order = MarketOrder.builder().addDiscountCard(discountCardNumber).addOrderEntry(new MarketOrderEntry(productId, productQty)).build();
-        MarketDiscountReceipt expectedReceipt = new MarketDiscountReceipt(LocalDateTime.now(), basketDiscountDecorator, 4321, discountCard);
+        MarketDiscountCard card = DiscountCardBuilder.builder().build();
+        MarketProduct product = MarketProductBuilder.builder().build();
+        Order order = MarketOrder.builder()
+                .addDiscountCard(card.getId())
+                .addOrderEntry(new MarketOrderEntry(product.getId(), product.getQuantity()))
+                .build();
+        MarketDiscountReceipt expectedReceipt = new MarketDiscountReceipt(
+                LocalDateTime.now(), basketDiscountDecorator, 4321, card);
 
-        when(productDao.exists(productId)).thenReturn(true);
-        when(productDao.isExistsAndQuantityAvailable(productId, productQty)).thenReturn(true);
-        doReturn(Optional.of(product)).when(productDao).getById(productId);
-        when(discountDao.getById(discountCardNumber)).thenReturn(Optional.of(discountCard));
-        when(receiptFactory.create(any(), any(), anyInt())).thenReturn(expectedReceipt);
+        doReturn(true).when(productDao).exists(product.getId());
+        doReturn(true).when(productDao)
+                .isExistsAndQuantityAvailable(product.getId(), product.getQuantity());
+        doReturn(Optional.of(product)).when(productDao).getById(product.getId());
+        doReturn(Optional.of(card)).when(discountDao).getById(card.getId());
+        doReturn(expectedReceipt).when(receiptFactory).create(any(), any(), anyInt());
 
         Receipt receipt = service.getReceipt(order);
 
@@ -94,7 +97,9 @@ class MarketServiceTest {
     void checkGetReceiptProductNotExist() {
         int productId = 1;
         int productQty = 1;
-        Order order = MarketOrder.builder().addOrderEntry(new MarketOrderEntry(productId, productQty)).build();
+        Order order = MarketOrder.builder()
+                .addOrderEntry(new MarketOrderEntry(productId, productQty))
+                .build();
 
         when(productDao.exists(productId)).thenReturn(false);
 
@@ -106,7 +111,8 @@ class MarketServiceTest {
         int productId = 1;
         int productQty = 1;
         int discountCardNumber = 1234;
-        Order order = MarketOrder.builder().addDiscountCard(discountCardNumber)
+        Order order = MarketOrder.builder()
+                .addDiscountCard(discountCardNumber)
                 .addOrderEntry(new MarketOrderEntry(productId, productQty))
                 .build();
         when(discountDao.getById(discountCardNumber)).thenReturn(Optional.empty());
@@ -122,7 +128,7 @@ class MarketServiceTest {
                 .build();
 
         when(productDao.exists(productId)).thenReturn(true);
-        when(productDao.isExistsAndQuantityAvailable(productId,productQty)).thenReturn(false);
+        when(productDao.isExistsAndQuantityAvailable(productId, productQty)).thenReturn(false);
 
         assertThrows(ProductQuantityIsNotAvailable.class, () -> service.getReceipt(order));
     }

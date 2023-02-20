@@ -1,12 +1,9 @@
 package by.bobrovich.market.validation;
 
-import by.bobrovich.market.api.DiscountCardDao;
 import by.bobrovich.market.api.Order;
-import by.bobrovich.market.api.ProductDao;
 import by.bobrovich.market.data.MarketOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 
 import java.util.List;
 
@@ -15,13 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class OrderValidatorTest {
 
     private OrderValidator orderValidator;
-    @Mock
-    private ProductDao productDao;
-    @Mock
-    private DiscountCardDao discountCardDao;
     @BeforeEach
     void setUp() {
-        orderValidator = new OrderValidator(productDao, discountCardDao);
+        orderValidator = new OrderValidator();
     }
 
     @Test
