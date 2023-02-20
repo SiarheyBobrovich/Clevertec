@@ -4,7 +4,6 @@ import by.bobrovich.market.api.Order;
 import by.bobrovich.market.dao.InMemoryDiscountCardDao;
 import by.bobrovich.market.dao.InMemoryProductDao;
 import by.bobrovich.market.data.MarketOrder;
-import by.bobrovich.market.data.MarketOrderEntry;
 import by.bobrovich.market.exceptions.ProductQuantityIsNotAvailable;
 import by.bobrovich.market.factory.ReceiptFactory;
 import org.junit.jupiter.api.Assertions;

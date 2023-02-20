@@ -4,101 +4,126 @@ import by.bobrovich.market.api.Receipt;
 import by.bobrovich.market.api.Order;
 import by.bobrovich.market.dao.InMemoryDiscountCardDao;
 import by.bobrovich.market.dao.InMemoryProductDao;
+import by.bobrovich.market.data.MarketBasket;
 import by.bobrovich.market.data.MarketOrder;
 import by.bobrovich.market.data.MarketOrderEntry;
+import by.bobrovich.market.data.receipt.MarketDiscountReceipt;
 import by.bobrovich.market.data.receipt.MarketReceipt;
+import by.bobrovich.market.decorator.BasketDiscountDecorator;
 import by.bobrovich.market.entity.MarketDiscountCard;
 import by.bobrovich.market.entity.MarketProduct;
+import by.bobrovich.market.exceptions.DiscountCardNotFoundException;
+import by.bobrovich.market.exceptions.ProductNotFoundException;
+import by.bobrovich.market.exceptions.ProductQuantityIsNotAvailable;
 import by.bobrovich.market.factory.ReceiptFactory;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.*;
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
-class MarketServiceTest {
-    private static final MarketService service;
-    private static final InMemoryProductDao productDao;
-    private static final InMemoryDiscountCardDao discountDao;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-    static {
-        productDao = Mockito.mock(InMemoryProductDao.class);
-        discountDao = Mockito.mock(InMemoryDiscountCardDao.class);
+@ExtendWith(MockitoExtension.class)
+class MarketServiceTest {
+
+    private MarketService service;
+    @Mock
+    private InMemoryProductDao productDao;
+    @Mock
+    private InMemoryDiscountCardDao discountDao;
+    @Mock
+    private ReceiptFactory receiptFactory;
+
+    @BeforeEach
+    void setUp(){
         service = new MarketService(
                 productDao,
                 discountDao,
-                new ReceiptFactory()
+                receiptFactory
         );
     }
 
     @Test
-    void getBillWithoutCard() {
-        initProductDao();
+    void checkGetReceiptMarketReceipt() {
+        int productId = 1;
+        int productQty = 1;
+        MarketBasket basket = new MarketBasket();
+        MarketProduct product = new MarketProduct(productId, "first", BigDecimal.valueOf(11.11), 10, false);
+        Order order = MarketOrder.builder().addOrderEntry(new MarketOrderEntry(productId, productQty)).build();
+        MarketReceipt expectedReceipt = new MarketReceipt(LocalDateTime.now(), basket, 1234);
 
-        MarketReceipt receipt = (MarketReceipt)service.getReceipt(getOrder());
+        when(productDao.exists(1)).thenReturn(true);
+        when(productDao.isExistsAndQuantityAvailable(productId, productQty)).thenReturn(true);
+        doReturn(Optional.of(product)).when(productDao).getById(productId);
+        when(receiptFactory.create(any(), any(), anyInt())).thenReturn(expectedReceipt);
 
-        String result = getRecieptAsString(receipt);
+        Receipt receipt = service.getReceipt(order);
 
-        Assertions.assertTrue(result.contains("$1327.87"));
-        Assertions.assertTrue(result.contains("$271.97"));
-        Assertions.assertTrue(result.contains("$1599.84"));
+        assertEquals(expectedReceipt, receipt);
     }
 
     @Test
-    void getBillWithCard() {
-        initProductDao();
-        Mockito.when(discountDao.getById(1234)).thenReturn(Optional.of(new MarketDiscountCard(1234, (byte)10)));
-        Receipt receipt = service.getReceipt(getOrderWithCard());
+    void checkGetReceiptMarketDiscountReceipt() {
+        int discountCardNumber = 1234;
+        int productId = 1;
+        int productQty = 1;
+        BasketDiscountDecorator basketDiscountDecorator = new BasketDiscountDecorator(new MarketBasket());
+        MarketDiscountCard discountCard = new MarketDiscountCard(discountCardNumber, (byte)10);
+        MarketProduct product = new MarketProduct(productId, "first", BigDecimal.valueOf(11.11), productQty, true);
+        Order order = MarketOrder.builder().addDiscountCard(discountCardNumber).addOrderEntry(new MarketOrderEntry(productId, productQty)).build();
+        MarketDiscountReceipt expectedReceipt = new MarketDiscountReceipt(LocalDateTime.now(), basketDiscountDecorator, 4321, discountCard);
 
-        String result = getRecieptAsString(receipt);
+        when(productDao.exists(productId)).thenReturn(true);
+        when(productDao.isExistsAndQuantityAvailable(productId, productQty)).thenReturn(true);
+        doReturn(Optional.of(product)).when(productDao).getById(productId);
+        when(discountDao.getById(discountCardNumber)).thenReturn(Optional.of(discountCard));
+        when(receiptFactory.create(any(), any(), anyInt())).thenReturn(expectedReceipt);
 
-        Assertions.assertTrue(result.contains("$1327.87"));
-        Assertions.assertTrue(result.contains("$271.97"));
-        Assertions.assertTrue(result.contains("$48.88"));
-        Assertions.assertTrue(result.contains("$1550.96"));
+        Receipt receipt = service.getReceipt(order);
+
+        assertEquals(expectedReceipt, receipt);
     }
 
-    private String getRecieptAsString(Receipt receipt) {
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        receipt.print(new PrintStream(buffer));
-        return buffer.toString(StandardCharsets.UTF_8);
+    @Test
+    void checkGetReceiptProductNotExist() {
+        int productId = 1;
+        int productQty = 1;
+        Order order = MarketOrder.builder().addOrderEntry(new MarketOrderEntry(productId, productQty)).build();
+
+        when(productDao.exists(productId)).thenReturn(false);
+
+        assertThrows(ProductNotFoundException.class, () -> service.getReceipt(order));
     }
 
-    private void initProductDao(){
-        Mockito.when(productDao.exists(Mockito.anyInt())).thenReturn(true);
-        Mockito.when(productDao.isExistsAndQuantityAvailable(Mockito.anyInt(), Mockito.anyInt())).thenReturn(true);
-
-        for (int i = 0; i < 3; i++) {
-            Mockito.doReturn(Optional.ofNullable(getProducts().get(i))).when(productDao).getById(i + 1);
-        }
-    }
-
-    private Order getOrder() {
-        return MarketOrder.builder()
-                .addOrderEntry(new MarketOrderEntry(1, 1))
-                .addOrderEntry(new MarketOrderEntry(2, 22))
-                .addOrderEntry(new MarketOrderEntry(3, 33))
+    @Test
+    void checkGetReceiptDiscountCardNotExist() {
+        int productId = 1;
+        int productQty = 1;
+        int discountCardNumber = 1234;
+        Order order = MarketOrder.builder().addDiscountCard(discountCardNumber)
+                .addOrderEntry(new MarketOrderEntry(productId, productQty))
                 .build();
-    }
+        when(discountDao.getById(discountCardNumber)).thenReturn(Optional.empty());
 
-    private List<MarketProduct> getProducts() {
-        return List.of(
-                new MarketProduct(1, "first", BigDecimal.valueOf(11.11), 10, false),
-                new MarketProduct(2, "second", BigDecimal.valueOf(22.22), 23, true),
-                new MarketProduct(3, "third", BigDecimal.valueOf(33.33), 34, false)
-        );
+        assertThrows(DiscountCardNotFoundException.class, () -> service.getReceipt(order));
     }
-
-    private Order getOrderWithCard() {
-        return MarketOrder.builder()
-                .addDiscountCard(1234)
-                .addOrderEntry(new MarketOrderEntry(1, 1))
-                .addOrderEntry(new MarketOrderEntry(2, 22))
-                .addOrderEntry(new MarketOrderEntry(3, 33))
+    @Test
+    void checkGetReceiptProductQuantityIsNotAvailable() {
+        int productId = 1;
+        int productQty = 1;
+        Order order = MarketOrder.builder()
+                .addOrderEntry(new MarketOrderEntry(productId, productQty))
                 .build();
+
+        when(productDao.exists(productId)).thenReturn(true);
+        when(productDao.isExistsAndQuantityAvailable(productId,productQty)).thenReturn(false);
+
+        assertThrows(ProductQuantityIsNotAvailable.class, () -> service.getReceipt(order));
     }
 }
