@@ -34,7 +34,7 @@ public class MarketDiscountReceipt extends AbstractReceipt {
                 totalFormat,
                 setScaleTo2(getTaxableTot(totalPrice)),
                 setScaleTo2(getVat(totalPrice)),
-                setScaleTo2(discount),//.setScale(2, RoundingMode.HALF_UP),
+                setScaleTo2(discount),
                 setScaleTo2(totalPriceWithDiscount)
         );
     }

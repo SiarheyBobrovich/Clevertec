@@ -7,16 +7,15 @@ import by.bobrovich.market.entity.MarketProduct;
 import by.bobrovich.market.exceptions.DiscountCardNotFoundException;
 import by.bobrovich.market.exceptions.ProductNotFoundException;
 import by.bobrovich.market.exceptions.ProductQuantityIsNotAvailable;
-import by.bobrovich.market.exceptions.ServiceNotAvailableNow;
 import by.bobrovich.market.factory.ReceiptFactory;
 import by.bobrovich.market.service.api.ProductService;
-import by.bobrovich.market.validation.ValidOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 @Validated
@@ -25,7 +24,8 @@ public class MarketService implements ProductService {
     private final ProductDao productDao;
     private final DiscountCardDao discountCardDao;
     private final ReceiptFactory receiptFactory;
-    private final Semaphore semaphore = new Semaphore(1);
+    private final Lock lock = new ReentrantLock();
+
 
     @Autowired
     public MarketService(ProductDao productDao,
@@ -46,9 +46,12 @@ public class MarketService implements ProductService {
                 .map(OrderEntry::id)
                 .toList());
 
-        beginTransaction();
-        doTransaction(orderEntries, basket);
-        commitTransaction();
+        lock.lock();
+        try {
+            addProductsInBasket(orderEntries, basket);
+        }finally {
+            lock.unlock();
+        }
 
         return receiptFactory.create(basket, discountCard, 1234);
     }
@@ -63,15 +66,7 @@ public class MarketService implements ProductService {
                 null;
     }
 
-    private void beginTransaction() {
-        try {
-            semaphore.acquire();
-        } catch (InterruptedException e) {
-            throw new ServiceNotAvailableNow("Service is not available now, please try again later");
-        }
-    }
-
-    private void doTransaction(List<OrderEntry> orderEntries, Basket basket) {
+    private void addProductsInBasket(List<OrderEntry> orderEntries, Basket basket) {
         isAvailableQuantityInDao(orderEntries);
 
         orderEntries.forEach(p -> {
@@ -87,10 +82,6 @@ public class MarketService implements ProductService {
         });
     }
 
-    private void commitTransaction() {
-        semaphore.release();
-    }
-
     private void checkAllIdExists(List<Integer> id) {
         id.forEach(x -> {
             if (!productDao.exists(x)) {
@@ -102,7 +93,6 @@ public class MarketService implements ProductService {
     private void isAvailableQuantityInDao(List<OrderEntry> orderEntries) {
         orderEntries.forEach(x -> {
             if (!productDao.isExistsAndQuantityAvailable(x.id(), x.quantity())) {
-                semaphore.release();
                 throw new ProductQuantityIsNotAvailable(x.id(), x.quantity());
             }
         });
