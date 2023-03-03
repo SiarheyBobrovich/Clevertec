@@ -12,7 +12,7 @@ public class MarketBasketBuilder {
 
         public MarketBasket build() {
             MarketBasket marketBasket = new MarketBasket();
-            marketBasket.addProduct(MarketProductBuilder.builder().build(), 99);
+            marketBasket.addProduct(MarketProductBuilder.build(), 99);
             return marketBasket;
         }
     }

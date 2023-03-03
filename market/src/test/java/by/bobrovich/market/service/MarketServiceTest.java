@@ -18,9 +18,9 @@ import by.bobrovich.market.exceptions.ProductQuantityIsNotAvailable;
 import by.bobrovich.market.factory.ReceiptFactory;
 import by.bobrovich.market.util.DiscountCardBuilder;
 import by.bobrovich.market.util.MarketProductBuilder;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -33,6 +33,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class MarketServiceTest {
 
+    @InjectMocks
     private MarketService service;
     @Mock
     private InMemoryProductDao productDao;
@@ -41,18 +42,9 @@ class MarketServiceTest {
     @Mock
     private ReceiptFactory receiptFactory;
 
-    @BeforeEach
-    void setUp(){
-        service = new MarketService(
-                productDao,
-                discountDao,
-                receiptFactory
-        );
-    }
-
     @Test
     void checkGetReceiptMarketReceipt() {
-        MarketProduct product = MarketProductBuilder.builder().build();
+        MarketProduct product = MarketProductBuilder.build();
         Order order = MarketOrder.builder()
                 .addOrderEntry(new MarketOrderEntry(product.getId(), product.getQuantity()))
                 .build();
@@ -72,8 +64,8 @@ class MarketServiceTest {
     @Test
     void checkGetReceiptMarketDiscountReceipt() {
         BasketDiscountDecorator basketDiscountDecorator = new BasketDiscountDecorator(new MarketBasket());
-        MarketDiscountCard card = DiscountCardBuilder.builder().build();
-        MarketProduct product = MarketProductBuilder.builder().build();
+        MarketDiscountCard card = DiscountCardBuilder.build();
+        MarketProduct product = MarketProductBuilder.build();
         Order order = MarketOrder.builder()
                 .addDiscountCard(card.getId())
                 .addOrderEntry(new MarketOrderEntry(product.getId(), product.getQuantity()))

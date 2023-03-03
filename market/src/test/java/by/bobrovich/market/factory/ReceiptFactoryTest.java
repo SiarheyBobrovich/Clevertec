@@ -87,7 +87,6 @@ class ReceiptFactoryTest {
         assertTrue(printedReceipt.contains("$1200.18"));
     }
 
-//////////////////////////////////////////////////////////////////////////
     @Test
     void checkCreateMarketDiscountReceiptContainsQty() {
         MarketBasket marketBasket = MarketBasketBuilder.builder().build();
