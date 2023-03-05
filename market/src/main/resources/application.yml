@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/clevertec?currentSchema=market
+    username: postgres
+    password: 172143
+    Driver: org.postgresql.Driver
+  product:
+    filename: market/src/main/resources/in_memory_products.csv
+  card:
+    filename: market/src/main/resources/in_memory_discount_cards.csv
+  alcohol:
+    database: memory #memory
+cache:
+  algorithm: lfu
+  size: 2

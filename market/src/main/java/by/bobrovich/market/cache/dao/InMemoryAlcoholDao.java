@@ -1,19 +1,30 @@
 package by.bobrovich.market.cache.dao;
 
 import by.bobrovich.market.cache.annotation.Cache;
+import by.bobrovich.market.cache.dao.api.AlcoholDao;
 import by.bobrovich.market.cache.entity.Alcohol;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Component
+@ConditionalOnProperty(
+        name = "spring.alcohol.database",
+        havingValue = "memory"
+)
 public class InMemoryAlcoholDao implements AlcoholDao {
     private final Map<Long, Alcohol> alcohols;
+    private final AtomicLong id;
 
     public InMemoryAlcoholDao() {
         this.alcohols = new HashMap<>();
+        this.id = new AtomicLong(1);
         init();
     }
 
@@ -25,8 +36,11 @@ public class InMemoryAlcoholDao implements AlcoholDao {
 
     @Override
     @Cache
-    public void save(Alcohol alcohol) {
+    public Long save(Alcohol alcohol) {
         alcohols.put(alcohol.getId(), alcohol);
+        long alcoholId = id.incrementAndGet();
+        alcohol.setId(alcoholId);
+        return alcoholId;
     }
 
     @Override
@@ -55,5 +69,6 @@ public class InMemoryAlcoholDao implements AlcoholDao {
                 Alcohol.builder().id(10L).name("ChaCha").country("Georgia").vol(99).price(BigDecimal.valueOf(0.5)).build(),
                 Alcohol.builder().id(11L).name("Rom").country("Portugal").vol(40.0).price(BigDecimal.valueOf(52)).build()
         ).collect(Collectors.toMap(Alcohol::getId, x -> x)));
+        id.set(alcohols.size());
     }
 }
