@@ -23,7 +23,7 @@ class LRUAlgorithmTest {
         lruAlgorithm.put(3L, "Three");
         lruAlgorithm.put(4L, "Four");
 
-        String actual = lruAlgorithm.get(1L);
+        String actual = lruAlgorithm.get(1L).orElseThrow();
 
         assertThat(actual)
                 .isEqualTo("actual");
@@ -37,7 +37,7 @@ class LRUAlgorithmTest {
         lruAlgorithm.put(1L, "actual");
         lruAlgorithm.put(4L, "Four");
 
-        String actual = lruAlgorithm.get(1L);
+        String actual = lruAlgorithm.get(1L).orElseThrow();
 
         assertThat(actual)
                 .isEqualTo("actual");
@@ -51,7 +51,7 @@ class LRUAlgorithmTest {
         lruAlgorithm.put(4L, "Four");
         lruAlgorithm.put(1L, "actual");
 
-        String actual = lruAlgorithm.get(1L);
+        String actual = lruAlgorithm.get(1L).orElseThrow();
 
         assertThat(actual)
                 .isEqualTo("actual");
@@ -65,7 +65,7 @@ class LRUAlgorithmTest {
         lruAlgorithm.put(3L, "Three");
         lruAlgorithm.put(4L, "Four");
 
-        String actual = lruAlgorithm.get(1L);
+        String actual = lruAlgorithm.get(1L).orElseThrow();
 
         assertThat(actual)
                 .isEqualTo("actual");
@@ -79,7 +79,7 @@ class LRUAlgorithmTest {
         lruAlgorithm.put(1L, "actual");
         lruAlgorithm.put(4L, "Four");
 
-        String actual = lruAlgorithm.get(1L);
+        String actual = lruAlgorithm.get(1L).orElseThrow();
 
         assertThat(actual)
                 .isEqualTo("actual");
@@ -92,7 +92,7 @@ class LRUAlgorithmTest {
         lruAlgorithm.put(4L, "Four");
         lruAlgorithm.put(1L, "actual");
 
-        String actual = lruAlgorithm.get(1L);
+        String actual = lruAlgorithm.get(1L).orElseThrow();
 
         assertThat(actual)
                 .isEqualTo("actual");
@@ -105,7 +105,7 @@ class LRUAlgorithmTest {
         lruAlgorithm.put(3L, "Three");
         lruAlgorithm.put(4L, "Four");
 
-        String actual = lruAlgorithm.get(1L);
+        String actual = lruAlgorithm.get(1L).orElseThrow();
 
         assertThat(actual)
                 .isEqualTo("actual");
@@ -118,7 +118,7 @@ class LRUAlgorithmTest {
         lruAlgorithm.put(1L, "actual");
         lruAlgorithm.put(4L, "Four");
 
-        String actual = lruAlgorithm.get(1L);
+        String actual = lruAlgorithm.get(1L).orElseThrow();
 
         assertThat(actual)
                 .isEqualTo("actual");
@@ -131,7 +131,7 @@ class LRUAlgorithmTest {
         lruAlgorithm.put(4L, "Four");
         lruAlgorithm.put(1L, "actual");
 
-        String actual = lruAlgorithm.get(1L);
+        String actual = lruAlgorithm.get(1L).orElseThrow();
 
         assertThat(actual)
                 .isEqualTo("actual");
@@ -144,10 +144,10 @@ class LRUAlgorithmTest {
         lruAlgorithm.put(3L, "Three");
         lruAlgorithm.put(4L, "Four");
 
-        String actual = lruAlgorithm.get(1L);
+        String actual = lruAlgorithm.get(1L).orElse("null");
 
         assertThat(actual)
-                .isEqualTo(null);
+                .isEqualTo("null");
     }
 
     @Test
@@ -165,7 +165,7 @@ class LRUAlgorithmTest {
         lruAlgorithm.put(2L, "two");
         lruAlgorithm.put(3L, "Three");
 
-        String actual = lruAlgorithm.get(1L);
+        String actual = lruAlgorithm.get(1L).orElseThrow();
 
         assertThat(actual)
                 .isEqualTo("actual");
@@ -176,9 +176,9 @@ class LRUAlgorithmTest {
         lruAlgorithm.put(2L, "Two");
         lruAlgorithm.delete(2L);
 
-        String two = lruAlgorithm.get(2L);
+        String two = lruAlgorithm.get(2L).orElse("null");
 
         assertThat(two)
-                .isEqualTo(null);
+                .isEqualTo("null");
     }
 }

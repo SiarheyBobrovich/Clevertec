@@ -3,7 +3,10 @@ package by.bobrovich.market.cache.algoritm;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class LFUAlgorithmTest {
 
@@ -23,10 +26,9 @@ class LFUAlgorithmTest {
         lfu.put(2L, "Two");
         lfu.put(3L, "Three");
 
-        String one = lfu.get(1L);
+        Optional<String> actual = lfu.get(1L);
 
-        assertThat(one)
-                .isEqualTo(null);
+        assertTrue(actual.isEmpty());
     }
     @Test
     void checkPutFIFO() {
@@ -39,10 +41,9 @@ class LFUAlgorithmTest {
         lfu.put(3L, "Three");
         lfu.put(4L, "Four");
 
-        String one = lfu.get(1L);
+        Optional<String> actual = lfu.get(1L);
 
-        assertThat(one)
-                .isEqualTo(null);
+        assertTrue(actual.isEmpty());
     }
     @Test
     void checkPutFIFO2() {
@@ -57,10 +58,8 @@ class LFUAlgorithmTest {
         lfu.put(1L, "One");
         lfu.put(2L, "Two");
 
-        String three = lfu.get(3L);
-
-        assertThat(three)
-                .isEqualTo(null);
+        Optional<String> actual = lfu.get(3L);
+        assertTrue(actual.isEmpty());
     }
 
     @Test
@@ -76,10 +75,8 @@ class LFUAlgorithmTest {
         lfu.put(1L, "One");
         lfu.put(2L, "Two");
 
-        String actual = lfu.get(null);
-
-        assertThat(actual)
-                .isEqualTo(null);
+        Optional<String> actual = lfu.get(null);
+        assertTrue(actual.isEmpty());
     }
 
     @Test
@@ -95,9 +92,10 @@ class LFUAlgorithmTest {
         lfu.put(1L, "One");
         lfu.put(2L, "Two");
 
-        String one = lfu.get(1L);
+        String actual = lfu.get(1L)
+                .orElseThrow();
 
-        assertThat(one)
+        assertThat(actual)
                 .isEqualTo("One");
     }
     @Test
@@ -113,9 +111,11 @@ class LFUAlgorithmTest {
         lfu.put(1L, "One");
         lfu.put(2L, "Two");
 
-        String two = lfu.get(2L);
 
-        assertThat(two)
+        String actual = lfu.get(2L)
+                .orElseThrow();
+
+        assertThat(actual)
                 .isEqualTo("Two");
     }
     @Test
@@ -131,9 +131,10 @@ class LFUAlgorithmTest {
         lfu.put(1L, "One");
         lfu.put(2L, "Two");
 
-        String four = lfu.get(4L);
+        String actual = lfu.get(4L)
+                .orElseThrow();
 
-        assertThat(four)
+        assertThat(actual)
                 .isEqualTo("Four");
     }
 
@@ -142,9 +143,6 @@ class LFUAlgorithmTest {
         lfu.put(2L, "Two");
         lfu.delete(2L);
 
-        String two = lfu.get(2L);
-
-        assertThat(two)
-                .isEqualTo(null);
+        assertTrue(lfu.get(2L).isEmpty());
     }
 }

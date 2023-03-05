@@ -1,13 +1,25 @@
 package by.bobrovich.market.cache.algoritm;
 
+import by.bobrovich.market.cache.algoritm.api.CacheAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
+
 import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.Optional;
 
+
+@Component
+@ConditionalOnProperty(
+        name = "cache.algorithm",
+        havingValue = "lru"
+)
 public class LRUAlgorithm<ID, T> implements CacheAlgorithm<ID, T> {
 
     private final Map<ID, T> cache;
 
-    public LRUAlgorithm(int size) {
+    public LRUAlgorithm(@Value("${cache.size}") int size) {
         this.cache = new LinkedHashMap<>() {
             @Override
             protected boolean removeEldestEntry(Map.Entry<ID, T> eldest) {
@@ -23,11 +35,11 @@ public class LRUAlgorithm<ID, T> implements CacheAlgorithm<ID, T> {
     }
 
     @Override
-    public T get(ID id) {
-        final T current = cache.remove(id);
-        if (current == null) return null;
-        cache.put(id, current);
-        return current;
+    public Optional<T> get(ID id) {
+        final T currentObj = cache.remove(id);
+        final Optional<T> result = Optional.ofNullable(currentObj);
+        result.ifPresent(o -> cache.put(id, o));
+        return result;
     }
 
     @Override

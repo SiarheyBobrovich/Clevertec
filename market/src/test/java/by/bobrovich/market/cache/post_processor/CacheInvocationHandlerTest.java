@@ -1,8 +1,10 @@
-package by.bobrovich.market.cache;
+package by.bobrovich.market.cache.post_processor;
 
-import by.bobrovich.market.cache.dao.AlcoholDao;
+import by.bobrovich.market.cache.algoritm.LFUAlgorithm;
+import by.bobrovich.market.cache.dao.api.AlcoholDao;
 import by.bobrovich.market.cache.dao.InMemoryAlcoholDao;
 import by.bobrovich.market.cache.entity.Alcohol;
+import by.bobrovich.market.cache.factory.AlgorithmFactory;
 import by.bobrovich.market.exceptions.AlcoholNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,10 +24,12 @@ class CacheInvocationHandlerTest {
     void setUp() {
         Class<InMemoryAlcoholDao> alcoholDaoClass = InMemoryAlcoholDao.class;
         inMemoryAlcoholDao = Mockito.mock(alcoholDaoClass);
+        AlgorithmFactory algorithmFactory = mock(AlgorithmFactory.class);
+        doReturn(new LFUAlgorithm<>(2)).when(algorithmFactory).getAlgorithm();
 
         ClassLoader classLoader = alcoholDaoClass.getClassLoader();
         Class<?>[] interfaces = alcoholDaoClass.getInterfaces();
-        CacheInvocationHandler proxy = new CacheInvocationHandler(2, inMemoryAlcoholDao);
+        CacheInvocationHandler proxy = new CacheInvocationHandler(inMemoryAlcoholDao, algorithmFactory);
         this.proxy = (AlcoholDao) Proxy.newProxyInstance(classLoader, interfaces, proxy);
     }
 
@@ -63,7 +67,7 @@ class CacheInvocationHandlerTest {
         Alcohol alcohol = Alcohol.builder().id(5L).build();
         doThrow(AlcoholNotFoundException.class).when(inMemoryAlcoholDao)
                 .get(5L);
-        doNothing().when(inMemoryAlcoholDao)
+        doReturn(123L).when(inMemoryAlcoholDao)
                 .save(alcohol);
 
         proxy.save(alcohol);
