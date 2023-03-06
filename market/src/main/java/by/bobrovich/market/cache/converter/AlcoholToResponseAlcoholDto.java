@@ -6,7 +6,7 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AlcoholToRequestAlcoholDto implements Converter<Alcohol, ResponseAlcoholDto> {
+public class AlcoholToResponseAlcoholDto implements Converter<Alcohol, ResponseAlcoholDto> {
 
     @Override
     public ResponseAlcoholDto convert(Alcohol source) {

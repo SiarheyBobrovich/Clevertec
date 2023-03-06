@@ -42,7 +42,9 @@ public class LFUAlgorithm<ID, T> implements CacheAlgorithm<ID, T> {
     public void put(ID id, T o) {
         if (id == null || o == null) return;
         Optional<Node> node = Optional.ofNullable(cache.get(id));
-        cache.put(id, node.orElseGet(() -> {
+        cache.put(id, node
+                .filter(n -> n.object.equals(o))
+                .orElseGet(() -> {
             removeOldestElement();
             return new Node(o);
         }));

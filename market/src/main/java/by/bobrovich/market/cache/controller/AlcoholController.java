@@ -23,24 +23,22 @@ public class AlcoholController {
         return ResponseEntity.ok(service.get(id));
     }
 
-    @PostMapping("/save")
+    @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<Void> alcoholSave(@RequestBody RequestAlcoholDto dto) {
-        long id = service.save(dto);
-        return ResponseEntity.created(URI.create("/alcohol/" + id))
-                .build();
+        return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/update/id/{id}")
+    @PutMapping("/{id}")
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<Void> alcoholUpdate(@PathVariable Long id,
             @RequestBody RequestAlcoholDto dto) {
         service.update(id, dto);
-        return ResponseEntity.created(URI.create("/alcohol/" + id))
+        return ResponseEntity.ok()
                 .build();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> alcoholDelete(@PathVariable Long id) {
         service.delete(id);

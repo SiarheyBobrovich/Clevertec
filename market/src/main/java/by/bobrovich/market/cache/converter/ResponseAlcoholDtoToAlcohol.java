@@ -1,15 +1,15 @@
 package by.bobrovich.market.cache.converter;
 
-import by.bobrovich.market.cache.data.response.ResponseAlcoholDto;
+import by.bobrovich.market.cache.data.request.RequestAlcoholDto;
 import by.bobrovich.market.cache.entity.Alcohol;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ResponseAlcoholDtoToAlcohol implements Converter<ResponseAlcoholDto, Alcohol> {
+public class ResponseAlcoholDtoToAlcohol implements Converter<RequestAlcoholDto, Alcohol> {
 
     @Override
-    public Alcohol convert(ResponseAlcoholDto source) {
+    public Alcohol convert(RequestAlcoholDto source) {
         return Alcohol.builder()
                 .name(source.name())
                 .price(source.price())

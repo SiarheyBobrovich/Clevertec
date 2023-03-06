@@ -37,9 +37,9 @@ public class InMemoryAlcoholDao implements AlcoholDao {
     @Override
     @Cache
     public Long save(Alcohol alcohol) {
-        alcohols.put(alcohol.getId(), alcohol);
         long alcoholId = id.incrementAndGet();
         alcohol.setId(alcoholId);
+        alcohols.put(alcohol.getId(), alcohol);
         return alcoholId;
     }
 
