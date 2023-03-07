@@ -1,11 +1,11 @@
 package by.bobrovich.market.cache.post_processor;
 
 import by.bobrovich.market.cache.algoritm.LFUAlgorithm;
-import by.bobrovich.market.cache.dao.api.AlcoholDao;
-import by.bobrovich.market.cache.dao.InMemoryAlcoholDao;
-import by.bobrovich.market.cache.entity.Alcohol;
+import by.bobrovich.market.dao.api.AlcoholDao;
+import by.bobrovich.market.dao.InMemoryAlcoholDao;
+import by.bobrovich.market.entity.Alcohol;
 import by.bobrovich.market.cache.factory.CacheAlgorithmFactory;
-import by.bobrovich.market.cache.exception.AlcoholNotFoundException;
+import by.bobrovich.market.exceptions.AlcoholNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

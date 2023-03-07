@@ -1,4 +1,4 @@
-package by.bobrovich.market.cache.dao.util;
+package by.bobrovich.market.dao.postgresql.util;
 
 public class AlcoholQueryUtil {
     private AlcoholQueryUtil(){}

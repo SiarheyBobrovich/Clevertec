@@ -1,4 +1,4 @@
-package by.bobrovich.market.cache.exception;
+package by.bobrovich.market.exceptions;
 
 public class AlcoholSqlException extends IllegalStateException {
     public AlcoholSqlException(String s, Throwable throwable) {

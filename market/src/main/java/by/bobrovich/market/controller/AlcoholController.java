@@ -1,11 +1,12 @@
-package by.bobrovich.market.cache.controller;
+package by.bobrovich.market.controller;
 
-import by.bobrovich.market.cache.data.request.RequestAlcoholDto;
-import by.bobrovich.market.cache.data.response.ResponseAlcoholDto;
-import by.bobrovich.market.cache.service.api.AlcoholService;
+import by.bobrovich.market.data.alcohol.request.RequestAlcoholDto;
+import by.bobrovich.market.data.alcohol.response.ResponseAlcoholDto;
+import by.bobrovich.market.service.api.AlcoholService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +17,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/alcohol")
 @RequiredArgsConstructor
+@Validated
 public class AlcoholController {
 
     private final AlcoholService service;
@@ -39,13 +42,14 @@ public class AlcoholController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ResponseEntity<Void> alcoholSave(@RequestBody RequestAlcoholDto dto) {
+    public ResponseEntity<Void> alcoholSave(@Valid @RequestBody RequestAlcoholDto dto) {
         service.save(dto);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(code = HttpStatus.CREATED)
+    @Valid
     public ResponseEntity<Void> alcoholUpdate(@PathVariable Long id,
             @RequestBody RequestAlcoholDto dto) {
         service.update(id, dto);

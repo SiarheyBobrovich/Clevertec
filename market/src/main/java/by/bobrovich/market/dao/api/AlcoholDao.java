@@ -1,7 +1,7 @@
-package by.bobrovich.market.cache.dao.api;
+package by.bobrovich.market.dao.api;
 
-import by.bobrovich.market.cache.entity.Alcohol;
-import by.bobrovich.market.cache.exception.AlcoholNotFoundException;
+import by.bobrovich.market.entity.Alcohol;
+import by.bobrovich.market.exceptions.AlcoholNotFoundException;
 
 import java.util.List;
 

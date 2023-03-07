@@ -1,11 +1,11 @@
-package by.bobrovich.market.cache.service;
+package by.bobrovich.market.service;
 
-import by.bobrovich.market.cache.dao.api.AlcoholDao;
-import by.bobrovich.market.cache.data.request.RequestAlcoholDto;
-import by.bobrovich.market.cache.data.response.ResponseAlcoholDto;
-import by.bobrovich.market.cache.entity.Alcohol;
-import by.bobrovich.market.cache.mapper.AlcoholMapper;
-import by.bobrovich.market.cache.service.api.AlcoholService;
+import by.bobrovich.market.dao.api.AlcoholDao;
+import by.bobrovich.market.data.alcohol.request.RequestAlcoholDto;
+import by.bobrovich.market.data.alcohol.response.ResponseAlcoholDto;
+import by.bobrovich.market.entity.Alcohol;
+import by.bobrovich.market.mapper.AlcoholMapper;
+import by.bobrovich.market.service.api.AlcoholService;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,8 @@
-package by.bobrovich.market.cache.mapper;
+package by.bobrovich.market.mapper;
 
-import by.bobrovich.market.cache.data.request.RequestAlcoholDto;
-import by.bobrovich.market.cache.data.response.ResponseAlcoholDto;
-import by.bobrovich.market.cache.entity.Alcohol;
+import by.bobrovich.market.data.alcohol.request.RequestAlcoholDto;
+import by.bobrovich.market.data.alcohol.response.ResponseAlcoholDto;
+import by.bobrovich.market.entity.Alcohol;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

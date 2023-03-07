@@ -1,4 +1,4 @@
-package by.bobrovich.market.cache.entity;
+package by.bobrovich.market.entity;
 
 import lombok.*;
 

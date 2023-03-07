@@ -1,7 +1,7 @@
-package by.bobrovich.market.cache.controller.handler;
+package by.bobrovich.market.controller.handler;
 
-import by.bobrovich.market.cache.exception.AlcoholNotFoundException;
-import by.bobrovich.market.cache.exception.AlcoholSqlException;
+import by.bobrovich.market.exceptions.AlcoholNotFoundException;
+import by.bobrovich.market.exceptions.AlcoholSqlException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;

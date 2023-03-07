@@ -1,7 +1,7 @@
-package by.bobrovich.market.cache.service.api;
+package by.bobrovich.market.service.api;
 
-import by.bobrovich.market.cache.data.request.RequestAlcoholDto;
-import by.bobrovich.market.cache.data.response.ResponseAlcoholDto;
+import by.bobrovich.market.data.alcohol.request.RequestAlcoholDto;
+import by.bobrovich.market.data.alcohol.response.ResponseAlcoholDto;
 
 import java.util.List;
 

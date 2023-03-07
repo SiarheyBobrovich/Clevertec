@@ -1,4 +1,4 @@
-package by.bobrovich.market.cache.data.response;
+package by.bobrovich.market.data.alcohol.response;
 
 import lombok.Builder;
 
