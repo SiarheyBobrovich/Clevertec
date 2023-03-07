@@ -2,12 +2,20 @@ package by.bobrovich.market.dao;
 
 import by.bobrovich.market.api.DiscountCardDao;
 import by.bobrovich.market.entity.MarketDiscountCard;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
 
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+
+@Repository
+@ConditionalOnProperty(
+        name = "spring.card.database",
+        havingValue = "memory"
+)
 public class InMemoryDiscountCardDao implements DiscountCardDao {
 
     private final Map<Integer, MarketDiscountCard> discountCardMap;

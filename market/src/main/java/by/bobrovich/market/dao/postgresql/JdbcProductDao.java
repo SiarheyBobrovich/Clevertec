@@ -2,6 +2,8 @@ package by.bobrovich.market.dao.postgresql;
 
 import by.bobrovich.market.api.ProductDao;
 import by.bobrovich.market.entity.MarketProduct;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 
@@ -15,6 +17,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
+
+@Repository
+@ConditionalOnProperty(
+        name = "spring.product.database",
+        havingValue= "jdbc"
+)
 public class JdbcProductDao implements ProductDao {
 
     protected final DataSource dataSource;

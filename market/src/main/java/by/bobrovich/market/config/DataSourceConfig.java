@@ -1,6 +1,7 @@
 package by.bobrovich.market.config;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -8,10 +9,15 @@ import org.springframework.core.env.Environment;
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
 
-//@Configuration
+@Configuration
+@ConditionalOnExpression(
+        "'${spring.product.database}'.equals('jdbc') or" +
+        "'${spring.card.database}'.equals('jdbc') or" +
+        "'${spring.alcohol.database}'.equals('jdbc')"
+)
 public class DataSourceConfig {
     @Bean
-    DataSource dataSource(Environment env) {
+    public DataSource dataSource(Environment env) {
         ComboPooledDataSource pool = new ComboPooledDataSource();
         try {
             pool.setDriverClass(env.getProperty("spring.datasource.Driver"));

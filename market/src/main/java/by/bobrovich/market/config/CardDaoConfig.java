@@ -23,8 +23,4 @@ public class CardDaoConfig {
 //    DiscountCardDao discountCardDao() throws IOException {
 //        return new FileDiscountCardDao(cardFileName);
 //    }
-//    @Bean
-//    DiscountCardDao discountCardDao(DataSource dataSource) {
-//        return new JdbcDiscountCardDao(dataSource);
-//    }
 }

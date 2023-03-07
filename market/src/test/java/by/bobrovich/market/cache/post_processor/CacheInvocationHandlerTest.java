@@ -4,8 +4,8 @@ import by.bobrovich.market.cache.algoritm.LFUAlgorithm;
 import by.bobrovich.market.cache.dao.api.AlcoholDao;
 import by.bobrovich.market.cache.dao.InMemoryAlcoholDao;
 import by.bobrovich.market.cache.entity.Alcohol;
-import by.bobrovich.market.cache.factory.AlgorithmFactory;
-import by.bobrovich.market.exceptions.AlcoholNotFoundException;
+import by.bobrovich.market.cache.factory.CacheAlgorithmFactory;
+import by.bobrovich.market.cache.exception.AlcoholNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -24,7 +24,7 @@ class CacheInvocationHandlerTest {
     void setUp() {
         Class<InMemoryAlcoholDao> alcoholDaoClass = InMemoryAlcoholDao.class;
         inMemoryAlcoholDao = Mockito.mock(alcoholDaoClass);
-        AlgorithmFactory algorithmFactory = mock(AlgorithmFactory.class);
+        CacheAlgorithmFactory algorithmFactory = mock(CacheAlgorithmFactory.class);
         doReturn(new LFUAlgorithm<>(2)).when(algorithmFactory).getAlgorithm();
 
         ClassLoader classLoader = alcoholDaoClass.getClassLoader();

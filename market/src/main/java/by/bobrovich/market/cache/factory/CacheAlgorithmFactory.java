@@ -5,8 +5,12 @@ import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Component;
 
 @Component
-public class AlgorithmFactory {
+public class CacheAlgorithmFactory {
 
+    /**
+     * Create a cache algorithm and return
+     * @return cache algorithm
+     */
     public CacheAlgorithm<Object, Object> getAlgorithm() {
         return getCacheAlgorithm();
     }

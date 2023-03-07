@@ -6,10 +6,12 @@ spring:
     Driver: org.postgresql.Driver
   product:
     filename: market/src/main/resources/in_memory_products.csv
+    database: memory #memory, file, jdbc
   card:
     filename: market/src/main/resources/in_memory_discount_cards.csv
+    database: memory #memory, file, jdbc
   alcohol:
-    database: memory #memory
+    database: jdbc #memory, jdbc
 cache:
-  algorithm: lfu
+  algorithm: lfu #lfu, lru
   size: 2

@@ -8,9 +8,9 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Cache {
-//    /**
-//     * Field name for save default method param name
-//     * @return field name
-//     */
+    /**
+     * ID field name default method param name
+     * @return ID field name
+     */
     String id() default "id";
 }

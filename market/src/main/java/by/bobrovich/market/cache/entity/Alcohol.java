@@ -15,4 +15,5 @@ public class Alcohol {
     private String country;
     private double vol;
     private BigDecimal price;
+    private Integer quantity;
 }

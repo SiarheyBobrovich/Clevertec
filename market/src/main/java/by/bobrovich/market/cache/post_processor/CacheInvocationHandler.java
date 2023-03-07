@@ -2,7 +2,7 @@ package by.bobrovich.market.cache.post_processor;
 
 import by.bobrovich.market.cache.algoritm.api.CacheAlgorithm;
 import by.bobrovich.market.cache.annotation.Cache;
-import by.bobrovich.market.cache.factory.AlgorithmFactory;
+import by.bobrovich.market.cache.factory.CacheAlgorithmFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
@@ -20,17 +20,15 @@ public class CacheInvocationHandler implements InvocationHandler {
     private final CacheAlgorithm<Object, Object> algorithm;
     private final Object target;
 
-    public CacheInvocationHandler(Object target, AlgorithmFactory algorithmFactory) {
+    public CacheInvocationHandler(Object target, CacheAlgorithmFactory algorithmFactory) {
         this.algorithm = algorithmFactory.getAlgorithm();
         this.target = target;
     }
 
     @Override
     public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
-        final Class<?>[] params = Arrays.stream(objects)
-                .map(Object::getClass)
-                .toArray(Class[]::new);
-        final Method realMethod = target.getClass().getMethod(method.getName(), params);
+        final Method realMethod = target.getClass()
+                .getMethod(method.getName(), method.getParameterTypes());
         final Object result;
 
         if (realMethod.isAnnotationPresent(Cache.class)) {

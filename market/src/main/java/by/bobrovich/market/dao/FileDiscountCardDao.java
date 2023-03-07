@@ -2,6 +2,8 @@ package by.bobrovich.market.dao;
 
 import by.bobrovich.market.api.DiscountCardDao;
 import by.bobrovich.market.entity.MarketDiscountCard;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,6 +14,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Repository
+@ConditionalOnProperty(
+        name = "spring.card.database",
+        havingValue = "file"
+)
 public class FileDiscountCardDao implements DiscountCardDao {
 
     private final Map<Integer, MarketDiscountCard> discountCardMap;

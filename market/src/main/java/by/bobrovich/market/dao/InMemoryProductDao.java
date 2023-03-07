@@ -2,6 +2,8 @@ package by.bobrovich.market.dao;
 
 import by.bobrovich.market.api.ProductDao;
 import by.bobrovich.market.entity.MarketProduct;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
@@ -10,6 +12,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
+@Repository
+@ConditionalOnProperty(
+        name = "spring.product.database",
+        havingValue = "file"
+)
 public class InMemoryProductDao implements ProductDao {
     protected final Map<Integer, MarketProduct> products;
 

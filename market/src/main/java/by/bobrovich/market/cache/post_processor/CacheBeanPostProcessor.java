@@ -1,7 +1,7 @@
 package by.bobrovich.market.cache.post_processor;
 
 import by.bobrovich.market.cache.annotation.Cache;
-import by.bobrovich.market.cache.factory.AlgorithmFactory;
+import by.bobrovich.market.cache.factory.CacheAlgorithmFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Lookup;
@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @RequiredArgsConstructor
 public class CacheBeanPostProcessor implements BeanPostProcessor {
 
-    private final AlgorithmFactory algorithmFactory;
+    private final CacheAlgorithmFactory algorithmFactory;
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
@@ -38,7 +38,7 @@ public class CacheBeanPostProcessor implements BeanPostProcessor {
     }
 
     @Lookup
-    public CacheInvocationHandler getInvocationHandler(Object bean, AlgorithmFactory algorithmFactory) {
+    public CacheInvocationHandler getInvocationHandler(Object bean, CacheAlgorithmFactory algorithmFactory) {
         return null;
     }
 }

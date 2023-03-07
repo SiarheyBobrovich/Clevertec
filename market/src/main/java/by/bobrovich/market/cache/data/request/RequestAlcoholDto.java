@@ -9,6 +9,7 @@ public record RequestAlcoholDto(
         String name,
         String country,
         double vol,
-        BigDecimal price
+        BigDecimal price,
+        int quantity
 ) {
 }

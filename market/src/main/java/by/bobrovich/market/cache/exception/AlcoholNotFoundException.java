@@ -1,8 +1,6 @@
-package by.bobrovich.market.exceptions;
+package by.bobrovich.market.cache.exception;
 
 public class AlcoholNotFoundException extends IllegalStateException {
-    public AlcoholNotFoundException() {
-    }
 
     public AlcoholNotFoundException(String s) {
         super(s);

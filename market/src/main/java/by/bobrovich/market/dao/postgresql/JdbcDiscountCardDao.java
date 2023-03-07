@@ -2,6 +2,8 @@ package by.bobrovich.market.dao.postgresql;
 
 import by.bobrovich.market.api.DiscountCardDao;
 import by.bobrovich.market.entity.MarketDiscountCard;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 
@@ -13,6 +15,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
+
+@Repository
+@ConditionalOnProperty(
+        name = "spring.card.database",
+        havingValue = "jdbc"
+)
 public class JdbcDiscountCardDao implements DiscountCardDao {
 
     private final DataSource dataSource;

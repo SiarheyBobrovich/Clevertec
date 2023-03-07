@@ -22,11 +22,6 @@ public class ProductDaoConfig {
     }
 
 //    @Bean
-//    ProductDao productDao(DataSource dataSource) {
-//        return new JdbcProductDao(dataSource);
-//    }
-//
-//    @Bean
 //    ProductDao productDao() throws IOException {
 //        return new FileProductDao(productFileName);
 //    }
