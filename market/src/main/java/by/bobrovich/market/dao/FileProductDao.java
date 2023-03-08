@@ -2,6 +2,7 @@ package by.bobrovich.market.dao;
 
 import by.bobrovich.market.api.ProductDao;
 import by.bobrovich.market.entity.MarketProduct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 public class FileProductDao implements ProductDao {
     private final Map<Integer, MarketProduct> products;
 
-    public FileProductDao(String fileName) throws IOException {
+    public FileProductDao(@Value("${spring.product.filename}") String fileName) throws IOException {
         final Path path = Paths.get(fileName);
         final List<String> lines = Files.readAllLines(path);
 

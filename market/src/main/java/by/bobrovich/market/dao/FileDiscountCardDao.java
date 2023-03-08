@@ -2,6 +2,7 @@ package by.bobrovich.market.dao;
 
 import by.bobrovich.market.api.DiscountCardDao;
 import by.bobrovich.market.entity.MarketDiscountCard;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Repository;
 
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 public class FileDiscountCardDao implements DiscountCardDao {
 
     private final Map<Integer, MarketDiscountCard> discountCardMap;
-    public FileDiscountCardDao(String fileName) throws IOException {
+    public FileDiscountCardDao(@Value("${spring.card.filename}") String fileName) throws IOException {
         final Path path = Paths.get(fileName);
         final List<String> lines = Files.readAllLines(path);
 
