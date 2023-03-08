@@ -13,14 +13,14 @@ class InMemoryProductDaoTest {
     @ParameterizedTest
     @ValueSource(ints = {1, 10, 20})
     void checkGetByIdExists(int id) {
-        dao.getById(id)
+        dao.findById(id)
                 .ifPresent(p -> assertEquals(id, p.getId()));
     }
 
     @ParameterizedTest
     @ValueSource(ints = {Integer.MIN_VALUE, 0, Integer.MAX_VALUE})
     void checkGetByIdDoNotExists(int id) {
-        assertNull(dao.getById(id).orElse(null));
+        assertNull(dao.findById(id).orElse(null));
     }
 
     @ParameterizedTest
@@ -50,12 +50,12 @@ class InMemoryProductDaoTest {
     @Test
     void checkUpdateProductQuantityPlus5() {
         int productId = 1;
-        MarketProduct product = dao.getById(productId).orElseThrow();
+        MarketProduct product = dao.findById(productId).orElseThrow();
         int quantity =  product.getQuantity() + 5;
 
         product.setQuantity(quantity);
         dao.update(product);
 
-        dao.getById(productId).ifPresent(p -> assertEquals(quantity, p.getQuantity()));
+        dao.findById(productId).ifPresent(p -> assertEquals(quantity, p.getQuantity()));
     }
 }

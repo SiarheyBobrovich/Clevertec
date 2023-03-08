@@ -53,7 +53,7 @@ class ReceiptServiceImplTest {
         doReturn(true).when(productDao).exists(product.getId());
         doReturn(true).when(productDao)
                 .isExistsAndQuantityAvailable(product.getId(), product.getQuantity());
-        doReturn(Optional.of(product)).when(productDao).getById(product.getId());
+        doReturn(Optional.of(product)).when(productDao).findById(product.getId());
         doReturn(expectedReceipt).when(receiptFactory).create(any(), any(), anyInt());
 
         Receipt receipt = service.getReceipt(order);
@@ -76,7 +76,7 @@ class ReceiptServiceImplTest {
         doReturn(true).when(productDao).exists(product.getId());
         doReturn(true).when(productDao)
                 .isExistsAndQuantityAvailable(product.getId(), product.getQuantity());
-        doReturn(Optional.of(product)).when(productDao).getById(product.getId());
+        doReturn(Optional.of(product)).when(productDao).findById(product.getId());
         doReturn(Optional.of(card)).when(discountDao).getById(card.getId());
         doReturn(expectedReceipt).when(receiptFactory).create(any(), any(), anyInt());
 

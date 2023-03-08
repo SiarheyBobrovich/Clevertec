@@ -1,6 +1,7 @@
 package by.bobrovich.market.service;
 
 import by.bobrovich.market.api.*;
+import by.bobrovich.market.dao.api.ProductDao;
 import by.bobrovich.market.data.MarketBasket;
 import by.bobrovich.market.entity.MarketDiscountCard;
 import by.bobrovich.market.entity.MarketProduct;
@@ -73,7 +74,7 @@ public class ReceiptServiceImpl implements ReceiptService {
             Integer productId = p.id();
             Integer orderQuantity = p.quantity();
 
-            MarketProduct product = productDao.getById(productId).orElseThrow();
+            MarketProduct product = productDao.findById(productId).orElseThrow();
 
             basket.addProduct(product, orderQuantity);
 

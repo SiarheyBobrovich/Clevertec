@@ -19,14 +19,14 @@ class FileProductDaoTest {
     @ParameterizedTest
     @ValueSource(ints = {1, 10, 20, 29})
     void checkGetByIdExists(int id) {
-        MarketProduct product = productDao.getById(id).orElseThrow();
+        MarketProduct product = productDao.findById(id).orElseThrow();
         assertEquals(id, product.getId());
     }
 
     @ParameterizedTest
     @ValueSource(ints = {Integer.MIN_VALUE, 0, 30})
     void checkGetByIdDoesNotExists(int id) {
-        assertFalse(productDao.getById(id).isPresent());
+        assertFalse(productDao.findById(id).isPresent());
     }
 
     @ParameterizedTest

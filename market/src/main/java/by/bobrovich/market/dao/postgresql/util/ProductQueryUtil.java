@@ -16,16 +16,6 @@ public class ProductQueryUtil {
                 id = ?;
             """;
 
-    public static final String SELECT_PRODUCT_BY_ID_IN_QUERY =
-            """  
-            SELECT
-                COUNT(row())\s
-            FROM
-                product
-            WHERE
-                id IN (?);
-            """;
-
     public static final String SELECT_PRODUCT_BY_ID_AND_QUANTITY_QUERY = """
             SELECT
                 p.id,
@@ -50,6 +40,32 @@ public class ProductQueryUtil {
                 WHERE
                     id = ?;
             """;
+    public static final String DELETE_PRODUCT_BY_ID = """
+            DELETE FROM market.product
+                WHERE id = ?;
+            """;
+    public static String INSERT_NEW_PRODUCT = """
+            INSERT INTO
+                market.product(
+                    description,
+                    price,
+                    quantity,
+                    is_discount
+                )
+                VALUES (?,?,?,?);
+            """;
+    public static String SELECT_ALL_PRODUCTS =
+            """
+            SELECT
+                id,
+                description,
+                price,
+                quantity,
+                is_discount
+            FROM
+                market.product;
+            """;
+
 
     private ProductQueryUtil(){}
 }

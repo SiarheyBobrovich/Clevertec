@@ -1,6 +1,6 @@
 package by.bobrovich.market.dao;
 
-import by.bobrovich.market.api.ProductDao;
+import by.bobrovich.market.dao.api.ProductDao;
 import by.bobrovich.market.entity.MarketProduct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -42,7 +42,7 @@ public class FileProductDao implements ProductDao {
     }
 
     @Override
-    public Optional<MarketProduct> getById(Integer id) {
+    public Optional<MarketProduct> findById(Integer id) {
         return Optional.ofNullable(products.get(id));
     }
 
@@ -59,5 +59,21 @@ public class FileProductDao implements ProductDao {
     @Override
     public void update(MarketProduct product) {
         products.put(product.getId(), product);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        products.remove(id);
+    }
+
+    @Override
+    public void save(MarketProduct product) {
+        products.put(product.getId(), product);
+    }
+
+    @Override
+    public List<MarketProduct> findAll() {
+        return products.values().stream()
+                .toList();
     }
 }

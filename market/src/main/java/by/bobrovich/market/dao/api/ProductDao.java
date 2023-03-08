@@ -1,8 +1,9 @@
-package by.bobrovich.market.api;
+package by.bobrovich.market.dao.api;
 
 import by.bobrovich.market.entity.MarketProduct;
 import by.bobrovich.market.exceptions.ProductNotFoundException;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ProductDao {
@@ -14,7 +15,7 @@ public interface ProductDao {
      * @return - Product if contains
      * @throws ProductNotFoundException - if not found
      */
-    Optional<MarketProduct> getById(Integer id);
+    Optional<MarketProduct> findById(Integer id);
 
     /**
      * Check Product in repository
@@ -36,4 +37,10 @@ public interface ProductDao {
      * @param product - updated
      */
     void update(MarketProduct product);
+
+    void delete(Integer id);
+
+    void save(MarketProduct product);
+
+    List<MarketProduct> findAll();
 }
