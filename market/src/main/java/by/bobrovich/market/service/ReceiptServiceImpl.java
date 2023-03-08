@@ -8,7 +8,7 @@ import by.bobrovich.market.exceptions.DiscountCardNotFoundException;
 import by.bobrovich.market.exceptions.ProductNotFoundException;
 import by.bobrovich.market.exceptions.ProductQuantityIsNotAvailable;
 import by.bobrovich.market.factory.ReceiptFactory;
-import by.bobrovich.market.service.api.ProductService;
+import by.bobrovich.market.service.api.RecieptService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -19,7 +19,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 @Validated
-public class MarketService implements ProductService {
+public class ReceiptServiceImpl implements RecieptService {
 
     private final ProductDao productDao;
     private final DiscountCardDao discountCardDao;
@@ -28,9 +28,9 @@ public class MarketService implements ProductService {
 
 
     @Autowired
-    public MarketService(ProductDao productDao,
-                         DiscountCardDao discountCardDao,
-                         ReceiptFactory receiptFactory) {
+    public ReceiptServiceImpl(ProductDao productDao,
+                              DiscountCardDao discountCardDao,
+                              ReceiptFactory receiptFactory) {
         this.productDao = productDao;
         this.discountCardDao = discountCardDao;
         this.receiptFactory = receiptFactory;

@@ -4,7 +4,7 @@ import by.bobrovich.market.api.Order;
 import by.bobrovich.market.api.Receipt;
 import by.bobrovich.market.validation.ValidOrder;
 
-public interface ProductService {
+public interface ReceiptService {
 
     /**
      * Calculate and return bill for order

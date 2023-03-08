@@ -31,10 +31,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class MarketServiceTest {
+class ReceiptServiceImplTest {
 
     @InjectMocks
-    private MarketService service;
+    private ReceiptServiceImpl service;
     @Mock
     private InMemoryProductDao productDao;
     @Mock

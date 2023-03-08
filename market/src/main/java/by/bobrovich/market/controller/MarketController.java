@@ -3,7 +3,7 @@ package by.bobrovich.market.controller;
 import by.bobrovich.market.api.Order;
 import by.bobrovich.market.api.Receipt;
 import by.bobrovich.market.data.MarketOrder;
-import by.bobrovich.market.service.api.ProductService;
+import by.bobrovich.market.service.api.RecieptService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,9 +18,9 @@ import java.util.List;
 @RequestMapping("/check")
 public class MarketController {
 
-    private final ProductService service;
+    private final RecieptService service;
 
-    public MarketController(ProductService service) {
+    public MarketController(RecieptService service) {
         this.service = service;
     }
 

@@ -15,14 +15,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-class ThreadsMarketServiceTest {
-    private static MarketService service;
+class ThreadsReceiptServiceImplTest {
+    private static ReceiptServiceImpl service;
     private final AtomicInteger count = new AtomicInteger(0);
     private final AtomicInteger failedCount = new AtomicInteger(0);
 
     @BeforeAll
     static void init() {
-        service = new MarketService(
+        service = new ReceiptServiceImpl(
                 new InMemoryProductDao(),
                 new InMemoryDiscountCardDao(),
                 new ReceiptFactory()
