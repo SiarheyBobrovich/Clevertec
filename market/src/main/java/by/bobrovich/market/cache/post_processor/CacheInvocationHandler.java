@@ -51,12 +51,17 @@ public class CacheInvocationHandler implements InvocationHandler {
                             algorithm.put(key, object);
                         });
             } else if (realMethod.getReturnType() != void.class) {
-                Object currentId = objects[0];
-                result = algorithm.get(currentId).orElseGet(() -> {
-                    Object invokeMethod = ReflectionUtils.invokeMethod(method, target, objects);
-                    algorithm.put(currentId, invokeMethod);
-                    return invokeMethod;
-                });
+                Object objectId = objects[0];
+                boolean isOptional = realMethod.getReturnType() == Optional.class;
+                Object cacheObject = algorithm.get(objectId)
+                        .orElseGet(() -> {
+                            Object methodObject = ReflectionUtils.invokeMethod(method, target, objects);
+                            Object o1 = isOptional && methodObject != null ?
+                                    ((Optional<?>) methodObject).orElse(null) : methodObject;
+                            algorithm.put(objectId, o1);
+                            return o1;
+                        });
+                result = isOptional ? Optional.ofNullable(cacheObject) : cacheObject;
             } else {
                 result = realMethod.invoke(target, objects);
                 algorithm.delete(objects[0]);
