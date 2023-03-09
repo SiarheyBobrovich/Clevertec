@@ -1,5 +1,6 @@
 package by.bobrovich.market.dao;
 
+import by.bobrovich.market.cache.annotation.Cache;
 import by.bobrovich.market.dao.api.ProductDao;
 import by.bobrovich.market.entity.MarketProduct;
 import by.bobrovich.market.exceptions.ProductNotFoundException;
@@ -29,6 +30,7 @@ public class InMemoryProductDao implements ProductDao {
     }
 
     @Override
+    @Cache
     public Optional<MarketProduct> findById(Integer id) {
         return Optional.ofNullable(products.get(id));
     }
@@ -46,6 +48,7 @@ public class InMemoryProductDao implements ProductDao {
     }
 
     @Override
+    @Cache
     public void update(MarketProduct product) {
         if (products.containsKey(product.getId())) {
             products.put(product.getId(), product);
@@ -53,11 +56,13 @@ public class InMemoryProductDao implements ProductDao {
     }
 
     @Override
+    @Cache
     public void delete(Integer id) {
         products.remove(id);
     }
 
     @Override
+    @Cache
     public void save(MarketProduct product) {
         int id = this.id.getAndIncrement();
         product.setId(id);

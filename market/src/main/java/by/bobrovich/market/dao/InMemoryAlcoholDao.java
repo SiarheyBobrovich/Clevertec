@@ -3,6 +3,7 @@ package by.bobrovich.market.dao;
 import by.bobrovich.market.cache.annotation.Cache;
 import by.bobrovich.market.dao.api.AlcoholDao;
 import by.bobrovich.market.entity.Alcohol;
+import by.bobrovich.market.exceptions.AlcoholNotFoundException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +33,9 @@ public class InMemoryAlcoholDao implements AlcoholDao {
     @Override
     @Cache
     public Alcohol get(Long id) {
-        return alcohols.get(id);
+        Alcohol alcohol = alcohols.get(id);
+        if (alcohol == null) throw new AlcoholNotFoundException("Not found");
+        return alcohol;
     }
 
     @Override

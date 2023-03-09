@@ -1,5 +1,6 @@
 package by.bobrovich.market.dao;
 
+import by.bobrovich.market.cache.annotation.Cache;
 import by.bobrovich.market.dao.api.ProductDao;
 import by.bobrovich.market.entity.MarketProduct;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,6 +43,7 @@ public class FileProductDao implements ProductDao {
     }
 
     @Override
+    @Cache
     public Optional<MarketProduct> findById(Integer id) {
         return Optional.ofNullable(products.get(id));
     }
@@ -57,16 +59,19 @@ public class FileProductDao implements ProductDao {
     }
 
     @Override
+    @Cache
     public void update(MarketProduct product) {
         products.put(product.getId(), product);
     }
 
     @Override
+    @Cache
     public void delete(Integer id) {
         products.remove(id);
     }
 
     @Override
+    @Cache
     public void save(MarketProduct product) {
         products.put(product.getId(), product);
     }

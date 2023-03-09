@@ -1,5 +1,6 @@
 package by.bobrovich.market.dao.postgresql;
 
+import by.bobrovich.market.cache.annotation.Cache;
 import by.bobrovich.market.dao.api.ProductDao;
 import by.bobrovich.market.entity.MarketProduct;
 import by.bobrovich.market.exceptions.ProductSqlException;
@@ -33,6 +34,7 @@ public class JdbcProductDao implements ProductDao {
     private final DataSource dataSource;
 
     @Override
+    @Cache
     public Optional<MarketProduct> findById(Integer id) {
         try(Connection connection = dataSource.getConnection();
             PreparedStatement statement = connection.prepareStatement(SELECT_PRODUCT_BY_ID_QUERY)
@@ -80,6 +82,7 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
+    @Cache
     public void update(MarketProduct product) {
         try(Connection connection = dataSource.getConnection();
             PreparedStatement statement = connection.prepareStatement(UPDATE_PRODUCT_QUERY)
@@ -98,6 +101,7 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
+    @Cache
     public void delete(Integer id) {
         try(Connection connection = dataSource.getConnection();
             PreparedStatement statement = connection.prepareStatement(DELETE_PRODUCT_BY_ID)
@@ -111,6 +115,7 @@ public class JdbcProductDao implements ProductDao {
     }
 
     @Override
+    @Cache
     public void save(MarketProduct product) {
         try(Connection connection = dataSource.getConnection();
             PreparedStatement statement = connection.prepareStatement(
