@@ -55,6 +55,9 @@ public class InMemoryAlcoholDao implements AlcoholDao {
     @Override
     @Cache
     public void update(Alcohol alcohol) {
+        if (!alcohols.containsKey(alcohol.getId())) {
+            throw new AlcoholNotFoundException("Alcohol with id: " + alcohol.getId() + " not found");
+        }
         alcohols.put(alcohol.getId(), alcohol);
     }
 

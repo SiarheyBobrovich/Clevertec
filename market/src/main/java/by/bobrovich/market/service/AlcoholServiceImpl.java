@@ -4,9 +4,11 @@ import by.bobrovich.market.dao.api.AlcoholDao;
 import by.bobrovich.market.data.alcohol.request.RequestAlcoholDto;
 import by.bobrovich.market.data.alcohol.response.ResponseAlcoholDto;
 import by.bobrovich.market.entity.Alcohol;
+import by.bobrovich.market.exceptions.AlcoholNotFoundException;
 import by.bobrovich.market.mapper.AlcoholMapper;
 import by.bobrovich.market.service.api.AlcoholService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class AlcoholServiceImpl implements AlcoholService {
 
     private final AlcoholDao dao;
@@ -43,7 +46,11 @@ public class AlcoholServiceImpl implements AlcoholService {
     public void update(Long id, RequestAlcoholDto dto) {
         Alcohol convert = mapper.requestAlcoholDtoToAlcohol(dto);
         convert.setId(id);
-        dao.update(convert);
+        try {
+            dao.update(convert);
+        }catch (AlcoholNotFoundException e) {
+            log.info("Update::{}", e.getMessage());
+        }
     }
 
     @Override

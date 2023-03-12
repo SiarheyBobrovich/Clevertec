@@ -104,7 +104,10 @@ public class JdbcAlcoholDao implements AlcoholDao {
             statement.setInt(5, alcohol.getQuantity());
             statement.setLong(6, alcohol.getId());
 
-            statement.executeUpdate();
+            int i = statement.executeUpdate();
+            if (i == 0) {
+                throw new AlcoholNotFoundException("Alcohol with id: " + alcohol.getId() + " not found");
+            }
         }catch (SQLException e) {
             throw new AlcoholSqlException("Data base is not available", e);
         }

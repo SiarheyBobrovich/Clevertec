@@ -43,6 +43,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void update(Integer id, RequestProductDto dto) {
+        if (!productDao.exists(id)) return;
         MarketProduct product = mapper.getProduct(dto);
         product.setId(id);
         productDao.update(product);
