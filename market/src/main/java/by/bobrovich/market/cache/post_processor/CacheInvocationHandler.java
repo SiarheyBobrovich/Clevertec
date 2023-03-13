@@ -3,6 +3,7 @@ package by.bobrovich.market.cache.post_processor;
 import by.bobrovich.market.cache.algoritm.api.CacheAlgorithm;
 import by.bobrovich.market.cache.annotation.Cache;
 import by.bobrovich.market.cache.factory.CacheAlgorithmFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
@@ -15,6 +16,7 @@ import java.util.Optional;
 
 @Component
 @Scope("prototype")
+@ConditionalOnBean(CacheBeanPostProcessor.class)
 public class CacheInvocationHandler implements InvocationHandler {
 
     private final CacheAlgorithm<Object, Object> algorithm;
