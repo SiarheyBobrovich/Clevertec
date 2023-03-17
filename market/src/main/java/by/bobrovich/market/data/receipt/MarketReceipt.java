@@ -1,22 +1,26 @@
 package by.bobrovich.market.data.receipt;
 
 import by.bobrovich.market.api.Basket;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Getter
 public class MarketReceipt extends AbstractReceipt {
+    @JsonIgnore
     protected final String totalBlockFormat =
             """
             TAXABLE TOT_                        $%s
             VAT17%%                              $%s
             TOTAL                               $%s
             """;
-    private final String totalBlock;
+    private final String total;
 
     public MarketReceipt(LocalDateTime dateTime, Basket basket, int cashier) {
         super(dateTime, basket, cashier);
-        this.totalBlock = createTotal(basket);
+        this.total = createTotal(basket);
     }
 
     private String createTotal(Basket basket) {
@@ -27,10 +31,5 @@ public class MarketReceipt extends AbstractReceipt {
                 setScaleTo2(getVat(total)),
                 setScaleTo2(total)
         );
-    }
-
-    @Override
-    public String getTotalBlock() {
-        return totalBlock;
     }
 }
