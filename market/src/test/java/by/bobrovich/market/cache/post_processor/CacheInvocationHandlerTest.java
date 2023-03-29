@@ -20,6 +20,7 @@ class CacheInvocationHandlerTest {
 
     private AlcoholDao proxy;
     private InMemoryAlcoholDao inMemoryAlcoholDao;
+
     @BeforeEach
     void setUp() {
         Class<InMemoryAlcoholDao> alcoholDaoClass = InMemoryAlcoholDao.class;
@@ -48,6 +49,16 @@ class CacheInvocationHandlerTest {
     }
 
     @Test
+    void CheckInvokeGetDoNotCallRealMethod() {
+        Alcohol expected = Alcohol.builder().build();
+        doReturn(expected).when(inMemoryAlcoholDao).get(any());
+        proxy.get(2L);
+        proxy.get(2L);
+
+        verify(inMemoryAlcoholDao, atMostOnce()).get(2L);
+    }
+
+    @Test
     void CheckInvokeDELETE() {
         Alcohol alcohol = Alcohol.builder().id(5L).build();
         Alcohol expected = Alcohol.builder().build();
@@ -62,6 +73,7 @@ class CacheInvocationHandlerTest {
 
         assertThat(actual).isEqualTo(expected);
     }
+
     @Test
     void CheckInvokePost() {
         Alcohol alcohol = Alcohol.builder().id(5L).build();
@@ -75,6 +87,7 @@ class CacheInvocationHandlerTest {
 
         assertThat(actual).isEqualTo(alcohol);
     }
+
     @Test
     void CheckInvokePut() {
         Alcohol alcohol = Alcohol.builder().id(5L).build();

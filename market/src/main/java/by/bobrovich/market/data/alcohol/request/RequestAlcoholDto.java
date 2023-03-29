@@ -10,19 +10,24 @@ import java.math.BigDecimal;
 
 @Builder
 public record RequestAlcoholDto(
+
         @NotNull
         @Pattern(regexp = "^([aA-zZ]+\\s?)+")
         String name,
+
         @NotNull
         @Pattern(regexp = "^[a-zA-Z]+")
         String country,
+
         @NotNull
         @Min(0)
         @Max(100)
         Double vol,
+
         @NotNull
         @Min(0)
         BigDecimal price,
+
         @NotNull
         @Min(0)
         Integer quantity

@@ -11,6 +11,7 @@ import by.bobrovich.market.exceptions.ProductQuantityIsNotAvailable;
 import by.bobrovich.market.factory.ReceiptFactory;
 import by.bobrovich.market.service.api.ReceiptService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Validated
+@Service
 public class ReceiptServiceImpl implements ReceiptService {
 
     private final ProductDao productDao;
@@ -48,7 +50,7 @@ public class ReceiptServiceImpl implements ReceiptService {
         lock.lock();
         try {
             addProductsInBasket(orderEntries, basket);
-        }finally {
+        } finally {
             lock.unlock();
         }
 

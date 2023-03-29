@@ -30,6 +30,7 @@ class LFUAlgorithmTest {
 
         assertTrue(actual.isEmpty());
     }
+
     @Test
     void checkPutFIFO() {
         lfu.put(1L, "One");
@@ -45,6 +46,7 @@ class LFUAlgorithmTest {
 
         assertTrue(actual.isEmpty());
     }
+
     @Test
     void checkPutFIFO2() {
         lfu.put(2L, "Two");
@@ -98,6 +100,7 @@ class LFUAlgorithmTest {
         assertThat(actual)
                 .isEqualTo("One");
     }
+
     @Test
     void checkGetExistTwo() {
         lfu.put(2L, "Two");
@@ -118,6 +121,7 @@ class LFUAlgorithmTest {
         assertThat(actual)
                 .isEqualTo("Two");
     }
+
     @Test
     void checkGetNotExistFour() {
         lfu.put(2L, "Two");
