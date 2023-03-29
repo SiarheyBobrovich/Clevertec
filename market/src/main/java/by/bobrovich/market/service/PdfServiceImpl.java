@@ -24,9 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,6 +31,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
@@ -44,6 +42,22 @@ import java.util.regex.Pattern;
 @Service
 @Log4j2
 public class PdfServiceImpl extends ReceiptServiceImpl implements PdfService {
+
+    public static final Path RESOURCES_TEMP;
+    public static final Path CLEVERTEC_TITLE;
+
+    static {
+        final URL tempDirectory = PdfServiceImpl.class.getResource("/temp");
+        final URL clevertecTitle = PdfServiceImpl.class.getResource("/Clevertec_Template.pdf");
+        if (Objects.isNull(tempDirectory)) {
+            throw new PdfServiceException("resources/temp not found");
+        }
+        if (Objects.isNull(clevertecTitle)) {
+            throw new PdfServiceException("resources/Clevertec_Template.pdf not found");
+        }
+        RESOURCES_TEMP = Paths.get(tempDirectory.getPath());
+        CLEVERTEC_TITLE = Paths.get(clevertecTitle.getPath());
+    }
 
     @Autowired
     public PdfServiceImpl(ProductDao productDao, DiscountCardDao discountCardDao, ReceiptFactory receiptFactory) {
@@ -59,7 +73,7 @@ public class PdfServiceImpl extends ReceiptServiceImpl implements PdfService {
         final PdfPTable bodyTable = getBodyTable(receipt);
         final PdfPTable totalTable = getTotalTable(receipt);
         final Path receipt1 = getPathToTempFile();
-        final PdfWriter writer = getPdfWriter(document, receipt1.toFile());
+        final PdfWriter writer = getPdfWriter(document, receipt1);
         final PdfReader pdfReader = getPdfReader();
         final PdfImportedPage importedPage = writer.getImportedPage(pdfReader, 1);
         document.open();
@@ -77,25 +91,21 @@ public class PdfServiceImpl extends ReceiptServiceImpl implements PdfService {
     private Path getPathToTempFile() {
         final LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         try {
-            URL resource = getClass().getResource("/temp");
-            if (resource == null) {
-                throw new PdfServiceException("/resources/temp does not exists");
-            }
-            return Files.createTempFile(Paths.get(resource.getPath()), "receipt:" + now + ":", ".pdf");
+            return Files.createTempFile(RESOURCES_TEMP, "receipt:" + now + ":", ".pdf");
         } catch (IOException e) {
             throw new PdfServiceException(e.getMessage());
         }
     }
 
     private void documentAddAll(Document document, Element... elements) {
-            Arrays.stream(elements).forEachOrdered(e -> {
-                try {
-                    document.add(e);
-                } catch (DocumentException exception) {
-                    log.warn(exception);
-                    throw new PdfServiceException(exception.getMessage());
-                }
-            });
+        Arrays.stream(elements).forEachOrdered(e -> {
+            try {
+                document.add(e);
+            } catch (DocumentException exception) {
+                log.warn(exception);
+                throw new PdfServiceException(exception.getMessage());
+            }
+        });
     }
 
     private PdfPTable getTotalTable(Receipt receipt) {
@@ -136,22 +146,20 @@ public class PdfServiceImpl extends ReceiptServiceImpl implements PdfService {
         return bodyTable;
     }
 
-    private PdfWriter getPdfWriter(Document document, File file) {
+    private PdfWriter getPdfWriter(Document document, Path path) {
         try {
-            return PdfWriter.getInstance(document, new FileOutputStream(file));
+            return PdfWriter.getInstance(document, Files.newOutputStream(path));
         } catch (DocumentException | IOException e) {
-            throw new RuntimeException(e);
+            log.warn(e);
+            throw new PdfServiceException(e.getMessage());
         }
     }
 
     private PdfReader getPdfReader() {
-        InputStream clevertecTitle = getClass().getResourceAsStream("/Clevertec_Template.pdf");
-        if (clevertecTitle == null) {
-            throw new PdfServiceException("/Clevertec_Template.pdf not found");
-        }
         try {
-            return new PdfReader(clevertecTitle);
+            return new PdfReader(Files.newInputStream(CLEVERTEC_TITLE));
         } catch (IOException e) {
+            log.warn(e);
             throw new PdfServiceException(e.getMessage());
         }
     }
