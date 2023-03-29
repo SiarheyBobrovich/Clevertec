@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-@Service
 @Validated
+@Service
 public class ReceiptServiceImpl implements ReceiptService {
 
     private final ProductDao productDao;
@@ -50,7 +50,7 @@ public class ReceiptServiceImpl implements ReceiptService {
         lock.lock();
         try {
             addProductsInBasket(orderEntries, basket);
-        }finally {
+        } finally {
             lock.unlock();
         }
 

@@ -4,8 +4,6 @@ import by.bobrovich.market.api.Basket;
 import by.bobrovich.market.api.Receipt;
 import by.bobrovich.market.decorator.BasketProductQuantityDecorator;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -50,7 +48,6 @@ public abstract class AbstractReceipt implements Receipt {
     public String getBody() {
         return body;
     }
-    public abstract String getTotalBlock();
 
     private String createBody(Basket basket) {
         List<BasketProductQuantityDecorator> products = basket.getProducts();
@@ -80,7 +77,7 @@ public abstract class AbstractReceipt implements Receipt {
         out.println(blockSeparator);
         out.print(getBody());
         out.println(blockSeparator);
-        out.println(getTotalBlock());
+        out.println(getTotal());
     }
 
     protected String normalizeString(int length, String description) {

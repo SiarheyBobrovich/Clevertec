@@ -2,10 +2,12 @@ package by.bobrovich.market.data.receipt;
 
 import by.bobrovich.market.decorator.BasketDiscountDecorator;
 import by.bobrovich.market.entity.MarketDiscountCard;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Getter
 public class MarketDiscountReceipt extends AbstractReceipt {
 
     protected final String totalFormat = """
@@ -37,10 +39,5 @@ public class MarketDiscountReceipt extends AbstractReceipt {
                 setScaleTo2(discount),
                 setScaleTo2(totalPriceWithDiscount)
         );
-    }
-
-    @Override
-    public String getTotalBlock() {
-        return total;
     }
 }

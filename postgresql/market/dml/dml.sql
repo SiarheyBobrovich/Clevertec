@@ -38,3 +38,17 @@ INSERT INTO market.discount_card (card_number, discount)
         (1234, 10),
         (2345, 10),
         (3456, 10);
+
+insert into  market.alcohol (name, country, vol, price, quantity)
+values
+	('Whisky', 'USA', 40.0, 123.4, 10),
+	('Vino', 'Moldova', 20.0, 55.3, 10),
+	('Vodka', 'Russia', 40.0, 1.4, 10),
+	('Night', 'Russia', 35.0, 14.2, 10),
+	('Absent', 'Belarus', 65.0, 99.9, 10),
+	('Moonshine', 'Ukraine', 40.0, 999.9, 10),
+	('Tekla', 'Mexico', 41.0, 76, 10),
+	('Shamanism', 'Belarus', 13.0, 16, 10),
+	('Every Year', 'Belarus', 15.0, 14, 10),
+	('ChaCha', 'Georgia', 99.0, 0.5, 10),
+	('Rom', 'Portugal', 40.0, 52, 10);

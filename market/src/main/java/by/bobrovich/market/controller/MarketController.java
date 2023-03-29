@@ -7,7 +7,6 @@ import by.bobrovich.market.service.api.ReceiptService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@RestController
 @RequestMapping("/check")
 @RequiredArgsConstructor
 public class MarketController {
@@ -24,8 +22,8 @@ public class MarketController {
 
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<Receipt> getBill(@RequestParam List<Integer> itemId,
-                                           @RequestParam(required = false) Integer card) {
+    public ResponseEntity<Receipt> getReceipt(@RequestParam List<Integer> itemId,
+                                              @RequestParam(required = false) Integer card) {
         Order order = MarketOrder.builder()
                 .addItemsId(itemId)
                 .addDiscountCard(card)
