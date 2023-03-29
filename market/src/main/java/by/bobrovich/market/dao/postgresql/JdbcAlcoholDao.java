@@ -31,17 +31,17 @@ public class JdbcAlcoholDao implements AlcoholDao {
 
     @Override
     public List<Alcohol> getAll() {
-        try(Connection connection = dataSource.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SELECT_ALL_ALCOHOLS)
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_ALL_ALCOHOLS)
         ) {
-            try(ResultSet resultSet = statement.executeQuery()) {
+            try (ResultSet resultSet = statement.executeQuery()) {
                 List<Alcohol> result = new ArrayList<>();
                 while (resultSet.next()) {
                     result.add(map(resultSet));
                 }
                 return result;
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             throw new AlcoholSqlException("Data base is not available", e);
         }
     }
@@ -49,17 +49,17 @@ public class JdbcAlcoholDao implements AlcoholDao {
     @Override
     @Cache
     public Alcohol get(Long id) {
-        try(Connection connection = dataSource.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SELECT_ALCOHOL_BY_ID)
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(SELECT_ALCOHOL_BY_ID)
         ) {
             statement.setLong(1, id);
-            try(ResultSet resultSet = statement.executeQuery()) {
-                if(resultSet.next()) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
                     return map(resultSet);
                 }
                 throw new AlcoholNotFoundException("Not found");
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             throw new AlcoholSqlException("Data base is not available", e);
         }
     }
@@ -68,9 +68,9 @@ public class JdbcAlcoholDao implements AlcoholDao {
     @Cache
     public Long save(Alcohol alcohol) {
         final long id;
-        try(Connection connection = dataSource.getConnection();
-            PreparedStatement statement = connection.prepareStatement(
-                    INSERT_NEW_ALCOHOL, PreparedStatement.RETURN_GENERATED_KEYS)
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(
+                     INSERT_NEW_ALCOHOL, PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             statement.setString(1, alcohol.getName());
             statement.setBigDecimal(2, alcohol.getPrice());
@@ -85,7 +85,7 @@ public class JdbcAlcoholDao implements AlcoholDao {
             id = generatedKeys.getLong("id");
             alcohol.setId(id);
 
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             throw new AlcoholSqlException("Data base is not available", e);
         }
         return id;
@@ -94,8 +94,8 @@ public class JdbcAlcoholDao implements AlcoholDao {
     @Override
     @Cache
     public void update(Alcohol alcohol) {
-        try(Connection connection = dataSource.getConnection();
-            PreparedStatement statement = connection.prepareStatement(UPDATE_ALCOHOL_BY_ID)
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(UPDATE_ALCOHOL_BY_ID)
         ) {
             statement.setString(1, alcohol.getName());
             statement.setBigDecimal(2, alcohol.getPrice());
@@ -105,7 +105,7 @@ public class JdbcAlcoholDao implements AlcoholDao {
             statement.setLong(6, alcohol.getId());
 
             statement.executeUpdate();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             throw new AlcoholSqlException("Data base is not available", e);
         }
     }
@@ -113,13 +113,13 @@ public class JdbcAlcoholDao implements AlcoholDao {
     @Override
     @Cache
     public void delete(Long id) {
-        try(Connection connection = dataSource.getConnection();
-            PreparedStatement statement = connection.prepareStatement(DELETE_ALCOHOL_BY_ID)
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(DELETE_ALCOHOL_BY_ID)
         ) {
             statement.setLong(1, id);
 
             statement.executeUpdate();
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             throw new AlcoholSqlException("Data base is not available", e);
         }
     }

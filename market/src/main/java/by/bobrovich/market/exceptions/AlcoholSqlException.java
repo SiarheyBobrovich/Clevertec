@@ -1,6 +1,7 @@
 package by.bobrovich.market.exceptions;
 
-public class AlcoholSqlException extends IllegalStateException {
+public class AlcoholSqlException extends RuntimeException {
+
     public AlcoholSqlException(String s, Throwable throwable) {
         super(s, throwable);
     }

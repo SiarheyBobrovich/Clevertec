@@ -18,6 +18,7 @@ public class AlcoholServiceImpl implements AlcoholService {
 
     private final AlcoholDao dao;
     private final AlcoholMapper mapper = Mappers.getMapper(AlcoholMapper.class);
+
     @Override
     public ResponseAlcoholDto get(Long id) {
         Alcohol alcohol = dao.get(id);

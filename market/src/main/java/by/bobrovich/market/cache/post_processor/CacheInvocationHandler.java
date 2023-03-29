@@ -25,6 +25,21 @@ public class CacheInvocationHandler implements InvocationHandler {
         this.target = target;
     }
 
+    /**
+     * If the cache contains an object, returns the object from the cache
+     * or caches the object caches to the specified algorithm.
+     *
+     * @param o       the proxy instance that the method was invoked on
+     * @param method  Method marked @Cache
+     * @param objects an array of objects containing the values of the
+     *                arguments passed in the method invocation on the proxy instance,
+     *                or {@code null} if interface method takes no arguments.
+     *                Arguments of primitive types are wrapped in instances of the
+     *                appropriate primitive wrapper class, such as
+     *                {@code java.lang.Integer} or {@code java.lang.Boolean}.
+     * @return if an object contains in cache return the cached object
+     *                else calls a real method, save result in cache and return
+     */
     @Override
     public Object invoke(Object o, Method method, Object[] objects) throws Throwable {
         final Method realMethod = target.getClass()
@@ -33,9 +48,12 @@ public class CacheInvocationHandler implements InvocationHandler {
 
         if (realMethod.isAnnotationPresent(Cache.class)) {
             final String idFieldName = realMethod.getAnnotation(Cache.class).id();
+
+            //Check parameters contain object with field 'id' like save, update
             final Optional<Object> objectToSave = Arrays.stream(objects)
                     .filter(o1 -> ReflectionUtils.findField(o1.getClass(), idFieldName) != null)
                     .findFirst();
+            //methods: public * save(Object)
             if (objectToSave.isPresent()) {
                 result = realMethod.invoke(target, objects);
                 Object object = objectToSave.get();
@@ -50,6 +68,7 @@ public class CacheInvocationHandler implements InvocationHandler {
                             Object key = ReflectionUtils.getField(f, object);
                             algorithm.put(key, object);
                         });
+                //methods: public Object get(id)
             } else if (realMethod.getReturnType() != void.class) {
                 Object objectId = objects[0];
                 boolean isOptional = realMethod.getReturnType() == Optional.class;
@@ -62,6 +81,7 @@ public class CacheInvocationHandler implements InvocationHandler {
                             return o1;
                         });
                 result = isOptional ? Optional.ofNullable(cacheObject) : cacheObject;
+                //method: public void delete(id)
             } else {
                 result = realMethod.invoke(target, objects);
                 algorithm.delete(objects[0]);

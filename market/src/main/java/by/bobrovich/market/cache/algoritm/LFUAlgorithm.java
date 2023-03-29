@@ -18,21 +18,9 @@ import java.util.Optional;
 @Scope("prototype")
 public class LFUAlgorithm<ID, T> implements CacheAlgorithm<ID, T> {
 
-    private class Node {
-
-        private final T object;
-        private long frequency;
-        Node(T o) {
-            this.object = o;
-            this.frequency = 1;
-        }
-        private T incrementAndGet() {
-            this.frequency++;
-            return object;
-        }
-    }
     private final Map<ID, Node> cache;
     private final int size;
+
     public LFUAlgorithm(@Value("${cache.size}") int size) {
         this.cache = new LinkedHashMap<>();
         this.size = size;
@@ -45,9 +33,9 @@ public class LFUAlgorithm<ID, T> implements CacheAlgorithm<ID, T> {
         cache.put(id, node
                 .filter(n -> n.object.equals(o))
                 .orElseGet(() -> {
-            removeOldestElement();
-            return new Node(o);
-        }));
+                    removeOldestElement();
+                    return new Node(o);
+                }));
     }
 
     @Override
@@ -70,5 +58,21 @@ public class LFUAlgorithm<ID, T> implements CacheAlgorithm<ID, T> {
                         .filter(idNode -> idNode.getValue().frequency == min)
                         .map(Map.Entry::getKey)
                         .findFirst()).ifPresent(cache::remove);
+    }
+
+    private class Node {
+
+        private final T object;
+        private long frequency;
+
+        Node(T o) {
+            this.object = o;
+            this.frequency = 1;
+        }
+
+        private T incrementAndGet() {
+            this.frequency++;
+            return object;
+        }
     }
 }
