@@ -12,13 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.nio.file.Path;
-
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-/**
- * @author Babrovich Siarhey on 17.03.2023
- */
 @ExtendWith(MockitoExtension.class)
 public class PdfServiceTest {
     @InjectMocks
@@ -62,8 +57,6 @@ public class PdfServiceTest {
                 .addOrderEntry(new MarketOrderEntry(27, 2))
                 .addOrderEntry(new MarketOrderEntry(28, 2))
                 .build();
-
-        Path path = service.getPath(order);
 
         assertDoesNotThrow(() -> service.getPath(order));
     }

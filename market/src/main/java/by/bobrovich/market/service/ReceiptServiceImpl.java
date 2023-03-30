@@ -18,7 +18,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Validated
-@Service
 public class ReceiptServiceImpl implements ReceiptService {
 
     private final ProductDao productDao;
