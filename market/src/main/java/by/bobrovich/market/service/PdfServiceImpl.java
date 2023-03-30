@@ -57,7 +57,9 @@ public class PdfServiceImpl extends ReceiptServiceImpl implements PdfService {
     }
 
     @Autowired
-    public PdfServiceImpl(ProductDao productDao, DiscountCardDao discountCardDao, ReceiptFactory receiptFactory) {
+    public PdfServiceImpl(ProductDao productDao,
+                          DiscountCardDao discountCardDao,
+                          ReceiptFactory receiptFactory) {
         super(productDao, discountCardDao, receiptFactory);
     }
 
@@ -95,6 +97,7 @@ public class PdfServiceImpl extends ReceiptServiceImpl implements PdfService {
         try {
             return Files.createTempFile(RESOURCES_TEMP, "receipt:" + now + ":", ".pdf");
         } catch (IOException e) {
+            log.error(e);
             throw new PdfServiceException(e.getMessage());
         }
     }
@@ -110,7 +113,7 @@ public class PdfServiceImpl extends ReceiptServiceImpl implements PdfService {
             try {
                 document.add(e);
             } catch (DocumentException exception) {
-                log.warn(exception);
+                log.error(exception);
                 throw new PdfServiceException(exception.getMessage());
             }
         });
@@ -176,7 +179,7 @@ public class PdfServiceImpl extends ReceiptServiceImpl implements PdfService {
         try {
             return PdfWriter.getInstance(document, Files.newOutputStream(path));
         } catch (DocumentException | IOException e) {
-            log.warn(e);
+            log.error(e);
             throw new PdfServiceException(e.getMessage());
         }
     }
