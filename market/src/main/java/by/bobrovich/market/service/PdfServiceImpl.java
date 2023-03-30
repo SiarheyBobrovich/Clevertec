@@ -36,9 +36,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
-/**
- * @author Babrovich Siarhey on 17.03.2023
- */
 @Service
 @Log4j2
 public class PdfServiceImpl extends ReceiptServiceImpl implements PdfService {
@@ -88,6 +85,11 @@ public class PdfServiceImpl extends ReceiptServiceImpl implements PdfService {
         return receipt1;
     }
 
+    /**
+     * Creates a temp file
+     *
+     * @return path to file
+     */
     private Path getPathToTempFile() {
         final LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         try {
@@ -97,6 +99,12 @@ public class PdfServiceImpl extends ReceiptServiceImpl implements PdfService {
         }
     }
 
+    /**
+     * Add all elements to the document
+     *
+     * @param document current doc
+     * @param elements elements to add to the doc
+     */
     private void documentAddAll(Document document, Element... elements) {
         Arrays.stream(elements).forEachOrdered(e -> {
             try {
@@ -108,6 +116,12 @@ public class PdfServiceImpl extends ReceiptServiceImpl implements PdfService {
         });
     }
 
+    /**
+     * Created pdf table with the receipt's total block
+     *
+     * @param receipt current receipt
+     * @return created table
+     */
     private PdfPTable getTotalTable(Receipt receipt) {
         PdfPTable totalTable = new PdfPTable(2);
         AtomicInteger i = new AtomicInteger(0);
@@ -120,6 +134,12 @@ public class PdfServiceImpl extends ReceiptServiceImpl implements PdfService {
         return totalTable;
     }
 
+    /**
+     * Created the pdf table with the receipt's title block
+     *
+     * @param receipt current receipt
+     * @return created table
+     */
     private PdfPTable getTitleTable(Receipt receipt) {
         PdfPTable titleTable = new PdfPTable(1);
         receipt.getTitle().replaceAll(" +", " ").lines()
@@ -132,6 +152,12 @@ public class PdfServiceImpl extends ReceiptServiceImpl implements PdfService {
         return titleTable;
     }
 
+    /**
+     * Created the pdf table with sales
+     *
+     * @param receipt current receipt
+     * @return created table
+     */
     private PdfPTable getBodyTable(Receipt receipt) {
         Pattern pattern = Pattern.compile("(\\d+)|(([a-zA-Z]+ ?)+)|(\\$\\d+\\.\\d+)");
         PdfPTable bodyTable = new PdfPTable(4);

@@ -5,9 +5,12 @@ import by.bobrovich.market.validation.ValidOrder;
 
 import java.nio.file.Path;
 
-/**
- * @author Babrovich Siarhey on 17.03.2023
- */
 public interface PdfService {
+
+    /**
+     * Creates a temporary Pdf file with a receipt, returns the path to the created file
+     * @param order a receipt order
+     * @return path to temp file
+     */
     Path getPath(@ValidOrder Order order);
 }
